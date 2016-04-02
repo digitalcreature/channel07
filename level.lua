@@ -36,7 +36,6 @@ function level.loadLevel(map, key)
 			else
 				new[x][y] = obj
 			end
-			print(obj)
 		end
 	end
 	new.width = w

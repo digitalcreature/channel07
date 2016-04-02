@@ -1,3 +1,4 @@
+require "math2"
 
 color = {}
 
@@ -14,14 +15,6 @@ function color.random(min, max)
 	return math.random(min, max), math.random(min, max), math.random(min, max)
 end
 
-local function args(r, g, b, a)
-	if type(r) == "table" then
-		return unpack(r)
-	else
-		return r, g, b, a
-	end
-end
-
 function color.equals(a, b, ignorealpha)
 	local max = ignorealpha and 3 or 4
 	for i = 1, max do
@@ -30,4 +23,12 @@ function color.equals(a, b, ignorealpha)
 		end
 	end
 	return true
+end
+
+function color.lerp(a, b, t)
+	return
+		math.lerp(a[1], b[1], t),
+		math.lerp(a[2], b[2], t),
+		math.lerp(a[3], b[3], t),
+		math.lerp(a[4] or 255, b[4] or 255, t)
 end

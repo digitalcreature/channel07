@@ -1,4 +1,7 @@
 require "level"
+require "vector"
+
+local vec = vector
 
 physics = {}
 
@@ -45,6 +48,12 @@ function physics.moveentity(entity, dx, dy, grid, solidpredicate)
 	end
 end
 
+local function inbounds(grid, x, y)
+	return
+		x >= 0 and y >= 0 and
+		x < grid.width and y < grid.height
+end
+
 function physics.checkrect(rect, grid, predicate)
 	if grid and predicate then
 		x = rect.x or 0
@@ -54,9 +63,7 @@ function physics.checkrect(rect, grid, predicate)
 		local collision = false
 		for i = floor(x), ceil(x + w) - 1 do
 			for j = floor(y), ceil(y + h) - 1 do
-				if i >= 0 and j >= 0 and
-						i < grid.width and j < grid.height and
-						predicate(grid[i][j]) then
+				if inbounds(grid, i, j) and predicate(grid[i][j], i, j) then
 					return true
 				end
 			end
@@ -64,11 +71,37 @@ function physics.checkrect(rect, grid, predicate)
 	end
 end
 
-function physics.solidpredicate(obj)
+function physics.solidpredicate(obj, x, y)
 	if obj == nil then return false end
 	if type(obj) == "table" then
 		return not obj.nonsolid
 	else
 		return true
 	end
+end
+
+function physics.raycast(pos, dir, maxdist, grid, hitprocesser, solidpredicate)
+	hitprocesser = hitprocesser or physics.raycasthitprinter
+	solidpredicate = solidpredicate or physics.solidpredicate
+	if grid then
+		local inc = .1
+		local dist = 0
+		local hits = 0
+		while dist < maxdist do
+			local i = floor(pos.x)
+			local j = floor(pos.y)
+			if inbounds(grid, i, j) and solidpredicate(grid[i][j], i, j) then
+				hitprocesser(pos, grid[i][j], dist, hits)
+				hits = hits + 1
+			end
+			pos.x = pos.x + inc * dir.x
+			pos.y = pos.y + inc * dir.y
+			dist = dist + inc
+		end
+	end
+end
+
+
+function physics.raycasthitprinter(pos, obj, dist, hitindex)
+	print(hitindex, vec.tostring(pos), obj, dist)
 end

@@ -26,7 +26,6 @@ function screen.load()
 	screen.canvas:setFilter("nearest", "nearest")
 end
 
-
 function screen.draw() end
 
 function love.draw()
@@ -37,6 +36,7 @@ function love.draw()
 	love.graphics.setColor(color.white)
 	local w, h = love.window.getMode()
 	love.graphics.draw(screen.canvas, 0, 0, 0, w / screen.width, h / screen.height)
+	if (debugdraw) then debugdraw() end
 end
 
 local keyevent = {}

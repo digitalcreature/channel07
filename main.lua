@@ -1,6 +1,9 @@
 require "screen"
 require "level"
 require "player"
+require "color"
+require "vector"
+require "camera"
 
 function love.load(arg)
 	screen.load()
@@ -11,13 +14,14 @@ function love.update(dt)
 	player:update(dt)
 end
 
-local _lovedraw = love.draw
+function screen.draw()
+	love.graphics.clear()
+end
 
-function love.draw()
-	_lovedraw()
+function debugdraw()
+	local scale = 24
 	love.graphics.push()
-		love.graphics.scale(24, 24)
-		love.graphics.clear()
+		love.graphics.scale(scale, scale)
 		for x = 0, level.current.width - 1 do
 			for y = 0, level.current.height - 1 do
 				local obj = level.current[x][y]
@@ -29,7 +33,9 @@ function love.draw()
 				end
 			end
 		end
-	player:draw()
+		player:draw()
+		love.graphics.setLineWidth(1 / scale)
+		camera:draw()
 	love.graphics.pop()
 end
 

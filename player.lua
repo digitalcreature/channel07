@@ -1,5 +1,6 @@
 require "color"
 require "physics"
+require "camera"
 
 player = {
 	x = 0,
@@ -8,7 +9,6 @@ player = {
 	h = 3/4,
 	nontile = true,
 }
-
 
 function player.key(x, y)
 	player.x = x - (player.w / 2) + .5
@@ -32,4 +32,8 @@ function player:draw()
 		love.graphics.setColor(color.blue)
 		love.graphics.rectangle("fill", 0, 0, self.w, self.h)
 	love.graphics.pop()
+end
+
+function player:center()
+	return self.x + self.w / 2, self.y + self.h / 2
 end

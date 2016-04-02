@@ -1,6 +1,5 @@
 require "physics"
 require "vector"
-require "player"
 
 local vec = vector
 
@@ -9,13 +8,13 @@ camera.pos = {x = 0, y = 0}
 camera.dir = {x = 1, y = 0}
 camera.plane = {x = 0, y = 1}
 
-function camera.setangle(r)
-	camera.dir.x, camera.dir.y = vec.rotate(vec.east, r)
-	camera.plane.x, camera.plane.y = vec.rotate(vec.south, r)
+function camera:setangle(r)
+	self.dir.x, self.dir.y = vec.rotate(vec.east, r)
+	self.plane.x, self.plane.y = vec.rotate(vec.south, r)
 end
 
-function camera.getangle()
-	return vec.angle(camera.dir)
+function camera:getangle()
+	return vec.angle(self.dir)
 end
 
 function camera.visiblepredicate(obj, x, y)
@@ -37,6 +36,6 @@ local function drawraycasthit(pos, obj, dist, hitindex)
 	end
 end
 
-function camera.draw()
-	physics.raycast(camera.pos, camera.dir, maxdist, level.current, drawraycasthit, camera.visiblepredicate)
+function camera:draw()
+	physics.raycast(self.pos, self.dir, maxdist, level.current, drawraycasthit, self.visiblepredicate)
 end

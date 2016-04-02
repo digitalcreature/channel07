@@ -2,22 +2,33 @@
 --simple vector lib
 vector = {}
 
-function vector.add(v1, v2)
-	return v1.x + v2.x, v1.y + v2.y, (v1.z and v2.z) and v1.z + v2.z
+local function args(x, y, z)
+	if type(x) == "table" then
+		return unpack(x)
+	else
+		return x, y, z
+	end
+end
+
+function vector.add(v, x, y, z)
+	x, y, z = args(x, y, z)
+	return v1.x + x, v1.y + y, (v1.z and z) and v1.z + z
 end
 
 function vector.scale(v, s)
 	return v.x * s, v.y * s, v.z and v.z * s
 end
 
-function vector.dot(v1, v2)
-	return (v1.x * v2.x) + (v1.y * v2.y) + ((v1.z or 0) * (v2.z or 0))
+function vector.dot(v, x, y, z)
+	x, y, z = args(x, y, z)
+	return (v.x * x) + (v.y * y) + ((v.z or 0) * (z or 0))
 end
 
-function vector.cross(v1, v2)
-	local x = v1.y * (v2.z or 0) - (v1.z or 0) * v2.y
-	local y = (v1.z or 0) * v2.x - v1.x * (v2.z or 0)
-	local z = v1.x * v2.y - v1.y * v2.x
+function vector.cross(v, x, y, z)
+	x, y, z = args(x, y, z)
+	local x = v.y * (z or 0) - (v.z or 0) * y
+	local y = (v.z or 0) * x - v.x * (z or 0)
+	local z = v.x * y - v.y * x
 	return x, y, z
 end
 
@@ -33,8 +44,9 @@ function vector.tostring(v)
 	return "<"..v.x..", "..v.y..">"
 end
 
-function vector.equals(v1, v2)
-	return v1.x == v2.x and v1.y == v2.y and (v1.z or 0) == (v2.z or 0)
+function vector.equals(v, x, y, z)
+	x, y, z = args(x, y, z)
+	return v.x == x and v.y == y and (v.z or 0) == (z or 0)
 end
 
 local sin, cos = math.sin, math.cos
@@ -47,6 +59,11 @@ end
 
 function vector.angle(v)
 	return - math.atan2(v.y, v.x)
+end
+
+function vector.copy(v, x, y, z)
+	x, y, z = args(x, y, z)
+	v.x, v.y, v.z = x, y, z
 end
 
 vector.zero = {x = 0, y = 0, z = 0}

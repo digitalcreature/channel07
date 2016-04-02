@@ -1,6 +1,7 @@
 require "color"
 require "physics"
 require "camera"
+require "vector"
 
 player = {
 	x = 0,
@@ -24,6 +25,8 @@ function player:update(dt)
 	if love.keyboard.isDown("a", "left") then dx = dx - spdx * dt end
 	if love.keyboard.isDown("d", "right") then dx = dx + spdx * dt end
 	physics.moveentity(self, dx, dy, level.current)
+	vector.copy(camera.pos, self:center())
+	camera:setangle(-love.mouse.getX() / (12 * math.pi))
 end
 
 function player:draw()

@@ -30,13 +30,13 @@ function level.loadLevel(map, key)
 				obj = obj(x, y)
 			end
 			if type(obj) == "table" then
-				obj.x, obj.y = x, y
 				if not obj.nontile then
 					new[x][y] = obj
 				end
 			else
 				new[x][y] = obj
 			end
+			print(obj)
 		end
 	end
 	new.width = w

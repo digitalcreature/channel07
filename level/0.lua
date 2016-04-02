@@ -1,11 +1,6 @@
 require "level"
 require "color"
-
-local player = {name = "player"}
-function player.draw()
-	love.graphics.setColor(color.blue)
-	love.graphics.rectangle("fill", 0, 0, 1, 1)
-end
+require "player"
 
 local wall = {name = "wall"}
 function wall.draw()
@@ -14,7 +9,7 @@ function wall.draw()
 end
 
 local key = {
-	player,
+	player.key,
 	wall,
 }
 

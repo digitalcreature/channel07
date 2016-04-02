@@ -26,6 +26,9 @@ function screen.load()
 	screen.canvas:setFilter("nearest", "nearest")
 end
 
+
+function screen.draw() end
+
 function love.draw()
 	love.graphics.clear(color.black)
 	love.graphics.setCanvas(screen.canvas)

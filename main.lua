@@ -1,5 +1,6 @@
 require "screen"
 require "level"
+require "player"
 
 function love.load(arg)
 	screen.load()
@@ -7,24 +8,29 @@ function love.load(arg)
 end
 
 function love.update(dt)
-
+	player:update(dt)
 end
 
-function screen.draw()
-	for x = 0, level.current.width - 1 do
-		for y = 0, level.current.height - 1 do
-			local obj = level.current[x][y]
-			if obj then
-				love.graphics.push()
-					love.graphics.translate(x, y)
-					obj:draw()
-				love.graphics.pop()
-			else
-				love.graphics.setColor(16, 16, 16)
-				love.graphics.rectangle("fill", x, y, 1, 1)
+local _lovedraw = love.draw
+
+function love.draw()
+	_lovedraw()
+	love.graphics.push()
+		love.graphics.scale(24, 24)
+		love.graphics.clear()
+		for x = 0, level.current.width - 1 do
+			for y = 0, level.current.height - 1 do
+				local obj = level.current[x][y]
+				if obj then
+					love.graphics.push()
+						love.graphics.translate(x, y)
+						obj:draw()
+					love.graphics.pop()
+				end
 			end
 		end
-	end
+	player:draw()
+	love.graphics.pop()
 end
 
 function love.keypressed(key)

@@ -9,8 +9,8 @@ function wall.draw()
 end
 
 local key = {
-	player.key,
-	wall,
+	[1] = player.key,
+	[2] = wall,
 }
 
 return level.loadLevel("level/0.png", key)

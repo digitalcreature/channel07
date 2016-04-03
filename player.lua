@@ -20,6 +20,15 @@ player = {
 	sensitivity = .01,
 }
 
+local function centercursor()
+	local w, h = love.window.getMode()
+	love.mouse.setPosition(w / 2, h / 2)
+end
+
+function player:load()
+	centercursor()
+end
+
 function player.key(x, y)
 	player.x = x - (player.w / 2) + .5
 	player.y = y - (player.h / 2) + .5
@@ -34,8 +43,8 @@ function player:update(dt)
 	local mousex = love.mouse.getX()
 	local center = love.window.getMode() / 2
 	ddir = ddir - (mousex - center) * self.sensitivity
-	love.mouse.setX(center)
 	love.mouse.setVisible(false)
+	centercursor()
 	self.dir = self.dir + ddir
 	camera:setangle(self.dir)
 	vector.copy(dpos, 0, 0)

@@ -4,10 +4,12 @@ require "player"
 require "color"
 require "vector"
 require "camera"
+require "debug2"
 
 function love.load(arg)
 	screen.load()
 	level.current = require "level.0"
+	player:load()
 end
 
 function love.update(dt)
@@ -19,7 +21,7 @@ function screen.draw()
 	camera:draw()
 end
 
--- function debugdraw()
+-- function debug.draw()
 -- 	local scale = 10
 -- 	love.graphics.push()
 -- 		love.graphics.scale(scale, scale)

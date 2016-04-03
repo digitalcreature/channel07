@@ -6,9 +6,18 @@ require "vector"
 player = {
 	x = 0,
 	y = 0,
-	w = 3/4,
-	h = 3/4,
+	w = 1/3,
+	h = 1/3,
 	nontile = true,
+	--facing direction
+	dir = math.pi,
+	--move speed
+	spdx = 2,
+	spdy = 2,
+	--keyboard look speed (rad/s)
+	lookspd = 1.5,
+	--mouselook sensitivity
+	sensitivity = .01,
 }
 
 function player.key(x, y)
@@ -17,17 +26,24 @@ function player.key(x, y)
 	return player
 end
 
-local spdx, spdy = 3, 3
 local dpos = {}
 function player:update(dt)
-	local angle = -love.mouse.getX() / (12 * math.pi)
-	camera:setangle(angle)
+	local ddir = 0
+	if love.keyboard.isDown("left") then ddir = ddir + self.lookspd * dt end
+	if love.keyboard.isDown("right") then ddir = ddir - self.lookspd * dt end
+	local mousex = love.mouse.getX()
+	local center = love.window.getMode() / 2
+	ddir = ddir - (mousex - center) * self.sensitivity
+	love.mouse.setX(center)
+	love.mouse.setVisible(false)
+	self.dir = self.dir + ddir
+	camera:setangle(self.dir)
 	vector.copy(dpos, 0, 0)
-	if love.keyboard.isDown("w", "up") then dpos.y = dpos.y - spdy * dt end
-	if love.keyboard.isDown("s", "down") then dpos.y = dpos.y + spdy * dt end
-	if love.keyboard.isDown("a", "left") then dpos.x = dpos.x - spdx * dt end
-	if love.keyboard.isDown("d", "right") then dpos.x = dpos.x + spdx * dt end
-	vector.copy(dpos, vector.rotate(dpos, angle - (math.pi / 2)))
+	if love.keyboard.isDown("w", "up") then dpos.y = dpos.y - self.spdy * dt end
+	if love.keyboard.isDown("s", "down") then dpos.y = dpos.y + self.spdy * dt end
+	if love.keyboard.isDown("a") then dpos.x = dpos.x - self.spdx * dt end
+	if love.keyboard.isDown("d") then dpos.x = dpos.x + self.spdx * dt end
+	vector.copy(dpos, vector.rotate(dpos, self.dir - (math.pi / 2)))
 	physics.moveentity(self, dpos.x, dpos.y, level.current)
 	vector.copy(camera.pos, self:center())
 end

@@ -16,3 +16,7 @@ function math.lerp(a, b, t)
 	t = math.clamp(t)
 	return a + (t * (b - a))
 end
+
+function math.sign(n)
+	return n == 0 and 0 or n / math.abs(n)
+end

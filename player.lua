@@ -17,7 +17,7 @@ player = {
 	--keyboard look speed (rad/s)
 	lookspd = 1.5,
 	--mouselook sensitivity
-	sensitivity = .01,
+	sensitivity = .003,
 }
 
 local function centercursor()

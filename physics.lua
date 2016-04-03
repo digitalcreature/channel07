@@ -1,5 +1,6 @@
 require "level"
 require "vector"
+require "math2"
 
 local vec = vector
 
@@ -8,6 +9,7 @@ physics = {}
 local abs = math.abs
 local floor = math.floor
 local ceil = math.ceil
+local sqrt = math.sqrt
 
 function physics.moveentity(entity, dx, dy, grid, solidpredicate)
 	solidpredicate = solidpredicate or physics.solidpredicate
@@ -81,15 +83,66 @@ function physics.solidpredicate(obj, x, y)
 end
 
 --callback for processing raycast hits. use ... for userdata
-local function raycasthitprocessor(start, dir, hit, dist, obj, hitindex, ...) end
+local function raycasthitprocessor(startpos, dir, pos, dist, obj, hitindex, ...) end
 
-local hit = {}
-function physics.raycast(start, dir, maxdist, grid, hitprocesser, solidpredicate, ...)
+local hitpos = {}
+local dir = {}
+function physics.raycast(pos, startdir, maxdist, grid, hitprocessor, solidpredicate, ...)
 	solidpredicate = solidpredicate or physics.solidpredicate
-	if grid and hitprocesser then
+	if grid and hitprocessor then
 		--TODO: finish raycast overhaul
-		vec.copy(hit, start)
-		local i, j = floor(hit.x), floor(hit.y)
+		local hitindex = 0
+		vec.copy(dir, startdir)
+		local dist = 0
+		local hitindex = 0
+		local i, j = floor(pos.x), floor(pos.y)
+		local di, dj
+      local dxdist = sqrt(1 + (dir.y * dir.y) / (dir.x * dir.x))
+      local dydist = sqrt(1 + (dir.x * dir.x) / (dir.y * dir.y))
+		local sidex
+		local sidey
+		local side
+      if (dir.x < 0) then
+      	di = -1
+      	sidex = (pos.x - i) * dxdist
+      else
+      	di = 1
+      	sidex = (i + 1 - pos.x) * dxdist
+		end
+      if (dir.y < 0) then
+      	dj = -1
+      	sidey = (pos.y - j) * dydist
+      else
+      	dj = 1
+      	sidey = (j + 1 - pos.y) * dydist
+      end
+      while (dist < maxdist) do
+	      if (sidex < sidey) then
+				sidex = sidex + dxdist
+				i = i + di
+				side = "x"
+			else
+				sidey = sidey + dydist
+				j = j + dj
+				side = "y"
+			end
+			if (side == "x") then
+				dist = (i - pos.x + (1 - di) / 2) / dir.x
+			else
+				dist = (j - pos.y + (1 - dj) / 2) / dir.y
+			end
+			if inbounds(grid, i, j) then
+				local obj = grid[i][j]
+				if solidpredicate(obj) then
+					vec.copy(hitpos, vec.add(pos, vec.scale(dir, dist)))
+					hitprocessor(pos, dir, hitpos, dist, obj, hitindex, ...)
+					hitindex = hitindex + 1
+				end
+			else
+				break
+			end
+		end
+
 
 		-- local inc = .1
 		-- local dist = 0

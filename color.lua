@@ -9,6 +9,8 @@ color.red = {255, 0, 0}
 color.green = {0, 255, 0}
 color.blue = {0, 0, 255}
 
+color.yellow = {255, 255, 0}
+
 function color.random(min, max)
 	min = min or 0
 	max = max or 255

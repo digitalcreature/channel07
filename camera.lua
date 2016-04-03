@@ -34,11 +34,11 @@ end
 
 local function drawraycasthit(start, dir, hit, dist, obj, hitindex, scanx, distfactor)
 	dist = dist * distfactor
-	if hitindex == 0  and type(obj) == "table" then
+	love.graphics.setColor(colorize(dist / camera.viewdist, obj))
+	if hitindex == 0 and type(obj) == "table" then
 		love.graphics.push()
 			love.graphics.translate(scanx, screen.height / 2)
 			love.graphics.scale(1, screen.height / dist)
-			love.graphics.setColor(colorize(dist / camera.viewdist, obj))
 			love.graphics.rectangle("fill", 0, -.5, 1, 1)
 		love.graphics.pop()
 	end

@@ -28,20 +28,20 @@ local maxdist = 8
 
 local wallcolor = {128, 64, 255}
 local function drawraycasthit(start, dir, hit, dist, obj, hitindex, scanx, distfactor)
-	love.graphics.setColor(color.lerp(wallcolor, color.black, dist / maxdist))
 	dist = dist * distfactor
-	local maxdist = maxdist * distfactor
+	love.graphics.setColor(color.lerp(wallcolor, color.black, dist / maxdist))
 	if hitindex == 0 then
 		love.graphics.push()
 			love.graphics.translate(scanx, screen.height / 2)
-			love.graphics.scale(1, screen.height * (1 - (dist / maxdist)))
-			-- love.graphics.rectangle("fill", 0, -.5, 1, 1)
+			love.graphics.scale(1, screen.height / dist)
+			love.graphics.rectangle("fill", 0, -.5, 1, 1)
 		love.graphics.pop()
 	end
-	if (dist > 3 and dist < 3.5) then
+	local d = dist / maxdist
+	if (d < .6 and d > .5) then
 		love.graphics.setColor(color.white)
 	end
-	love.graphics.circle("fill", hit.x, hit.y, .15)
+	-- love.graphics.circle("fill", hit.x, hit.y, .15)
 end
 
 local dir = {}

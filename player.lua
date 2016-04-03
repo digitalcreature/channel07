@@ -18,15 +18,18 @@ function player.key(x, y)
 end
 
 local spdx, spdy = 3, 3
+local dpos = {}
 function player:update(dt)
-	local dx, dy = 0, 0
-	if love.keyboard.isDown("w", "up") then dy = dy - spdy * dt end
-	if love.keyboard.isDown("s", "down") then dy = dy + spdy * dt end
-	if love.keyboard.isDown("a", "left") then dx = dx - spdx * dt end
-	if love.keyboard.isDown("d", "right") then dx = dx + spdx * dt end
-	physics.moveentity(self, dx, dy, level.current)
+	local angle = -love.mouse.getX() / (12 * math.pi)
+	camera:setangle(angle)
+	vector.copy(dpos, 0, 0)
+	if love.keyboard.isDown("w", "up") then dpos.y = dpos.y - spdy * dt end
+	if love.keyboard.isDown("s", "down") then dpos.y = dpos.y + spdy * dt end
+	if love.keyboard.isDown("a", "left") then dpos.x = dpos.x - spdx * dt end
+	if love.keyboard.isDown("d", "right") then dpos.x = dpos.x + spdx * dt end
+	vector.copy(dpos, vector.rotate(dpos, angle - (math.pi / 2)))
+	physics.moveentity(self, dpos.x, dpos.y, level.current)
 	vector.copy(camera.pos, self:center())
-	camera:setangle(-love.mouse.getX() / (12 * math.pi))
 end
 
 function player:draw()

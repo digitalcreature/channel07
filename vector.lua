@@ -4,7 +4,7 @@ vector = {}
 
 local function args(x, y, z)
 	if type(x) == "table" then
-		return unpack(x)
+		return x.x, x.y, x.z
 	else
 		return x, y, z
 	end
@@ -12,7 +12,7 @@ end
 
 function vector.add(v, x, y, z)
 	x, y, z = args(x, y, z)
-	return v1.x + x, v1.y + y, (v1.z and z) and v1.z + z
+	return v.x + x, v.y + y, (v.z and z) and v.z + z
 end
 
 function vector.scale(v, s)
@@ -32,16 +32,19 @@ function vector.cross(v, x, y, z)
 	return x, y, z
 end
 
-function vector.len2(v)
-	return vector.dot(v, v)
+function vector.len2(x, y, z)
+	x, y, z = args(x, y, z)
+	return x * x + y * y + (z and z * z or 0)
 end
 
-function vector.len(v)
-	math.sqrt(vector.len2(v))
+function vector.len(x, y, z)
+	x, y, z = args(x, y, z)
+	return math.sqrt(vector.len2(x, y, z))
 end
 
-function vector.tostring(v)
-	return "<"..v.x..", "..v.y..">"
+function vector.tostring(x, y, z)
+	x, y, z = args(x, y, z)
+	return z and "<"..x..", "..y..", "..z..">" or "<"..x..", "..y..">"
 end
 
 function vector.equals(v, x, y, z)
@@ -57,13 +60,25 @@ function vector.rotate(v, r)
 		v.x * sin(- r) + v.y * cos(- r)
 end
 
-function vector.angle(v)
-	return - math.atan2(v.y, v.x)
+function vector.angle(x, y)
+	x, y = args(x, y)
+	return - math.atan2(y, x)
 end
 
 function vector.copy(v, x, y, z)
 	x, y, z = args(x, y, z)
 	v.x, v.y, v.z = x, y, z
+end
+
+function vector.norm(x, y, z)
+	x, y, z = args(x, y, z)
+	local len = vector.len(x, y, z)
+	return x / len, y / len, z and z / len
+end
+
+function vector.projectscalar(a, x, y, z)
+	x, y, z = args(x, y, z)
+	return vector.dot(a, x, y, z) / vector.len(x, y, z)
 end
 
 vector.zero = {x = 0, y = 0, z = 0}

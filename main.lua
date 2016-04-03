@@ -16,10 +16,11 @@ end
 
 function screen.draw()
 	love.graphics.clear()
+	camera:draw()
 end
 
 function debugdraw()
-	local scale = 24
+	local scale = 10
 	love.graphics.push()
 		love.graphics.scale(scale, scale)
 		for x = 0, level.current.width - 1 do
@@ -34,8 +35,6 @@ function debugdraw()
 			end
 		end
 		player:draw()
-		love.graphics.setLineWidth(1 / scale)
-		camera:draw()
 	love.graphics.pop()
 end
 

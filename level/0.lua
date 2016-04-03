@@ -4,7 +4,7 @@ require "player"
 
 local wall = {name = "wall"}
 function wall.draw()
-	love.graphics.setColor(color.white)
+	love.graphics.setColor(255, 255, 255, 64)
 	love.graphics.rectangle("fill", 0, 0, 1, 1)
 end
 

@@ -80,28 +80,29 @@ function physics.solidpredicate(obj, x, y)
 	end
 end
 
-function physics.raycast(pos, dir, maxdist, grid, hitprocesser, solidpredicate)
-	hitprocesser = hitprocesser or physics.raycasthitprinter
+local hit = {}
+function physics.raycast(start, dir, maxdist, grid, hitprocesser, solidpredicate, ...)
+	hitprocesser = hitprocesser or physics.raycasthitprocessor
 	solidpredicate = solidpredicate or physics.solidpredicate
 	if grid then
+		vec.copy(hit, start)
 		local inc = .1
 		local dist = 0
 		local hits = 0
 		while dist < maxdist do
-			local i = floor(pos.x)
-			local j = floor(pos.y)
+			local i = floor(hit.x)
+			local j = floor(hit.y)
 			if inbounds(grid, i, j) and solidpredicate(grid[i][j], i, j) then
-				hitprocesser(pos, grid[i][j], dist, hits)
+				hitprocesser(start, dir, hit, dist, grid[i][j], hits, ...)
 				hits = hits + 1
 			end
-			pos.x = pos.x + inc * dir.x
-			pos.y = pos.y + inc * dir.y
+			vec.copy(hit, vec.add(hit, vec.scale(dir, inc)))
 			dist = dist + inc
 		end
 	end
 end
 
+--callback for processing raycast hits. use ... for userdata
+function physics.raycasthitprocessor(start, dir, hit, dist, obj, hitindex, ...)
 
-function physics.raycasthitprinter(pos, obj, dist, hitindex)
-	print(hitindex, vec.tostring(pos), obj, dist)
 end

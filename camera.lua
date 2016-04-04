@@ -6,7 +6,7 @@ local vec = vector
 local temp = {}
 camera = {
 	viewdist = 8,
-	pos = {x = 0, y = 0},
+	pos = {x = 0, y = 0, z = .6},
 	dir = {},
 	plane = {},
 }
@@ -38,7 +38,7 @@ local function drawraycasthit(start, dir, hit, dist, obj, hitindex, axis, scanx,
 		love.graphics.push()
 			love.graphics.translate(scanx, screen.height / 2)
 			love.graphics.scale(1, screen.height / dist)
-			love.graphics.rectangle("fill", 0, -.5, 1, 1)
+			love.graphics.rectangle("fill", 0, camera.pos.z - 1, 1, 1)
 		love.graphics.pop()
 	end
 end

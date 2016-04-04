@@ -67,7 +67,7 @@ end
 
 function vector.copy(v, x, y, z)
 	x, y, z = args(x, y, z)
-	v.x, v.y, v.z = x, y, z
+	v.x, v.y, v.z = x or v.x, y or v.y, z or v.z
 end
 
 function vector.norm(x, y, z)

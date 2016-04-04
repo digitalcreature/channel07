@@ -83,7 +83,7 @@ function physics.solidpredicate(obj, x, y)
 end
 
 --callback for processing raycast hits. use ... for userdata
-local function raycasthitprocessor(startpos, dir, pos, dist, obj, hitindex, ...) end
+local function raycasthitprocessor(startpos, dir, pos, dist, obj, hitindex, axis, ...) end
 
 local hitpos = {}
 local dir = {}
@@ -101,7 +101,7 @@ function physics.raycast(pos, startdir, maxdist, grid, hitprocessor, solidpredic
       local dydist = sqrt(1 + (dir.x * dir.x) / (dir.y * dir.y))
 		local sidex
 		local sidey
-		local side
+		local axis
       if (dir.x < 0) then
       	di = -1
       	sidex = (pos.x - i) * dxdist
@@ -120,13 +120,13 @@ function physics.raycast(pos, startdir, maxdist, grid, hitprocessor, solidpredic
 	      if (sidex < sidey) then
 				sidex = sidex + dxdist
 				i = i + di
-				side = "x"
+				axis = "x"
 			else
 				sidey = sidey + dydist
 				j = j + dj
-				side = "y"
+				axis = "y"
 			end
-			if (side == "x") then
+			if (axis == "x") then
 				dist = (i - pos.x + (1 - di) / 2) / dir.x
 			else
 				dist = (j - pos.y + (1 - dj) / 2) / dir.y
@@ -135,7 +135,7 @@ function physics.raycast(pos, startdir, maxdist, grid, hitprocessor, solidpredic
 				local obj = grid[i][j]
 				if solidpredicate(obj) then
 					vec.copy(hitpos, vec.add(pos, vec.scale(dir, dist)))
-					hitprocessor(pos, dir, hitpos, dist, obj, hitindex, ...)
+					hitprocessor(pos, dir, hitpos, dist, obj, hitindex, axis, ...)
 					hitindex = hitindex + 1
 				end
 			else

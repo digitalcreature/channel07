@@ -40,11 +40,13 @@ function player:update(dt)
 	local ddir = 0
 	if love.keyboard.isDown("left") then ddir = ddir + self.lookspd * dt end
 	if love.keyboard.isDown("right") then ddir = ddir - self.lookspd * dt end
-	local mousex = love.mouse.getX()
-	local center = love.window.getMode() / 2
-	ddir = ddir - (mousex - center) * self.sensitivity
-	love.mouse.setVisible(false)
-	centercursor()
+	if love.window.hasFocus() then
+		local mousex = love.mouse.getX()
+		local center = love.window.getMode() / 2
+		ddir = ddir - (mousex - center) * self.sensitivity
+		love.mouse.setVisible(false)
+		centercursor()
+	end
 	self.dir = self.dir + ddir
 	camera:setangle(self.dir)
 	vector.copy(dpos, 0, 0)

@@ -27,12 +27,11 @@ function camera.visiblepredicate(obj, x, y)
 	return type(obj) == "table" and not obj.invisible
 end
 
-local wallcolor = {128, 64, 255}
 local function colorize(t, obj)
 	return color.lerp(obj.color, color.black, t)
 end
 
-local function drawraycasthit(start, dir, hit, dist, obj, hitindex, scanx, distfactor)
+local function drawraycasthit(start, dir, hit, dist, obj, hitindex, axis, scanx, distfactor)
 	dist = dist * distfactor
 	love.graphics.setColor(colorize(dist / camera.viewdist, obj))
 	if hitindex == 0 and type(obj) == "table" then

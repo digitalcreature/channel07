@@ -47,7 +47,6 @@ physics.Domain = class() do
 	function base:raycast(pos, startdir, maxdist, hitprocessor, solidpredicate, ...)
 		solidpredicate = solidpredicate or physics.solidpredicate
 		if physics.Domain.current and hitprocessor then
-			--TODO: finish raycast overhaul
 			local hitindex = 0
 			dir:set(startdir)
 			local dist = 0

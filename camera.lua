@@ -23,19 +23,19 @@ function camera.visiblepredicate(obj, x, y)
 end
 
 local function colorize(t, obj)
-	return color.lerp(obj.color, color.black, t)
+	return color.lerp(color.white, color.black, t)
 end
 
 local function drawraycasthit(start, dir, hit, dist, obj, hitindex, axis, scanx, distfactor)
 	dist = dist * distfactor
 	love.graphics.setColor(colorize(dist / camera.viewdist, obj))
-	-- if hitindex == 0 and type(obj) == "table" then
+	if hitindex == 0 and type(obj) == "table" then
 		love.graphics.push()
-			love.graphics.translate(scanx, screen.height / 2)
+			love.graphics.translate(scanx, (screen.height / 2) + (camera.pos.z - 1))
 			love.graphics.scale(1, screen.height / dist)
-			love.graphics.rectangle("fill", 0, camera.pos.z - 1, 1, 1)
+			love.graphics.rectangle("fill", 0, 0, 1, 1)
 		love.graphics.pop()
-	-- end
+	end
 end
 
 local dir = Vector()

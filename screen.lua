@@ -61,8 +61,14 @@ function keyevent.f4()
 	else
 		love.window.setMode(0, 0, screen.fullscreenflags)
 	end
+	return true
 end
 
 function screen.keypressed(key)
-	if keyevent[key] then keyevent[key]() end
+	return keyevent[key] and keyevent[key]()
+end
+
+function screen.centercursor()
+	local w, h = love.window.getMode()
+	love.mouse.setPosition(w / 2, h / 2)
 end

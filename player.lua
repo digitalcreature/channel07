@@ -1,6 +1,8 @@
 require "color"
 require "physics"
 require "camera"
+require "screen"
+
 require "Vector"
 
 player = physics.Entity(0, 0, 1/3, 1/3)
@@ -16,13 +18,8 @@ player.lookspd = 1.5
 --mouselook sensitivity
 player.sensitivity = .003
 
-local function centercursor()
-	local w, h = love.window.getMode()
-	love.mouse.setPosition(w / 2, h / 2)
-end
-
 function player:load()
-	centercursor()
+	screen.centercursor()
 end
 
 function player.key(x, y)
@@ -41,7 +38,7 @@ function player:update(dt)
 		local center = love.window.getMode() / 2
 		ddir = ddir - (mousex - center) * self.sensitivity
 		love.mouse.setVisible(false)
-		centercursor()
+		screen.centercursor()
 	end
 	self.dir = self.dir + ddir
 	camera:setangle(self.dir)

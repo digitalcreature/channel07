@@ -5,6 +5,7 @@ require "player"
 require "color"
 require "camera"
 require "debug2"
+require "pause"
 
 require "Level"
 
@@ -15,7 +16,9 @@ function love.load(arg)
 end
 
 function love.update(dt)
-	player:update(dt)
+	if not pause.paused then
+		player:update(dt)
+	end
 end
 
 function screen.draw()
@@ -43,5 +46,9 @@ end
 -- end
 
 function love.keypressed(key)
-	screen.keypressed(key)
+	return screen.keypressed(key) or pause.keypressed(key)
+end
+
+function love.mousepressed(x, y, button)
+	return pause.mousepressed(x, y, button)
 end

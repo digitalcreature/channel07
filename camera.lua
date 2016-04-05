@@ -1,8 +1,9 @@
 require "physics"
+require "render"
+
 require "Vector"
 
 camera = {
-	viewdist = 8,
 	pos = Vector(0, 0, 0.6),
 	dir = Vector(),
 	plane = Vector(),
@@ -18,21 +19,18 @@ function camera:getangle()
 	return self.dir:angle2d()
 end
 
-function camera.visiblepredicate(obj, x, y)
+function camera.visiblepredicate(obj)
 	return type(obj) == "table" and not obj.invisible
+end
+
+function camera.transparentpredicate(obj)
+	return type(obj) == "table" and obj.transparent
 end
 
 local function drawraycasthit(start, dir, pos, dist, obj, hitindex, axis, i, j, scanx, distfactor)
 	dist = dist * distfactor
-	love.graphics.setColor(color.lerp(color.white, color.black, dist / camera.viewdist))
-	if hitindex == 0 and class.of(obj) == Tile then
-		love.graphics.push()
-			love.graphics.translate(scanx, screen.height / 2)
-			love.graphics.scale(1, screen.height / dist)
-			love.graphics.translate(0, camera.pos.z - 1)
-			obj:render(i, j, pos, dist, axis)
-		love.graphics.pop()
-	end
+	pos.z = 0
+	render.render(obj, pos, dist, scanx, i, j, axis)
 end
 
 local dir = Vector()
@@ -43,8 +41,9 @@ function camera:draw()
 	while i < 1 do
 		dir:set(self.plane):scale(i):add(self.dir):norm()
 		local distfactor = dir:projectscalar(self.dir)
-		physics.Domain.current:raycast(self.pos, dir, self.viewdist, drawraycasthit, self.visiblepredicate, scanx, distfactor)
+		physics.Domain.current:raycast(self.pos, dir, render.maxdist + 1, drawraycasthit, self.visiblepredicate, self.transparentpredicate, scanx, distfactor)
 		i = i + inc
 		scanx = scanx + 1
 	end
+	render.draw()
 end

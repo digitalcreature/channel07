@@ -1,5 +1,6 @@
 require "oop"
 require "color"
+require "camera"
 
 Tile = class() do
 
@@ -9,8 +10,13 @@ Tile = class() do
 		self.material = material or Tile.Material()
 	end
 
-	function base:render(i, j, pos, dist, axis)
-		self.material:shader(self, i, j, pos, dist, axis)
+	function base:render(pos, dist, scanx, i, j, axis)
+		love.graphics.push()
+			love.graphics.translate(scanx, screen.height / 2)
+			love.graphics.scale(1, screen.height / dist)
+			love.graphics.translate(0, - 1 - pos.z + camera.pos.z)
+			self.material:shader(self, i, j, pos, dist, axis)
+		love.graphics.pop()
 	end
 
 	Tile.Material = class() do
@@ -61,7 +67,9 @@ Tile = class() do
 				local u
 				if axis == "x" then
 					u = pos.y - j
+					-- love.graphics.setColor(128, 128, 128)
 				else
+					-- love.graphics.setColor(color.white)
 					u = pos.x - i
 				end
 				local quad = self.quads[math.floor(u * self.quadcount)]

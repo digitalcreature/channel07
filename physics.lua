@@ -44,7 +44,7 @@ physics.Domain = class() do
 
 	local hitpos = Vector()
 	local dir = Vector()
-	function base:raycast(pos, startdir, maxdist, hitprocessor, solidpredicate, ...)
+	function base:raycast(pos, startdir, maxdist, hitprocessor, solidpredicate, passablepredicate, ...)
 		solidpredicate = solidpredicate or physics.solidpredicate
 		if physics.Domain.current and hitprocessor then
 			local hitindex = 0
@@ -72,7 +72,7 @@ physics.Domain = class() do
 				dj = 1
 				sidey = (j + 1 - pos.y) * dydist
 			end
-			while (dist < maxdist) do
+			while (not maxdist or dist < maxdist) do--dist < maxdist) do
 				if (sidex < sidey) then
 					sidex = sidex + dxdist
 					i = i + di
@@ -88,10 +88,12 @@ physics.Domain = class() do
 					dist = (j - pos.y + (1 - dj) / 2) / dir.y
 				end
 				local obj = physics.Domain.current:get(i, j)
+				if not self:inbounds(i, j) then break end
 				if solidpredicate(obj) then
 					hitpos:set(dir):scale(dist):add(pos)
 					hitprocessor(pos, dir, hitpos, dist, obj, hitindex, axis, i, j, ...)
 					hitindex = hitindex + 1
+					if not passablepredicate or not passablepredicate(obj) then break end
 				end
 			end
 		end

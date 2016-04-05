@@ -28,4 +28,8 @@ local function newClass(_, super)
 	return class
 end
 
+function class.of(obj)
+	return type(obj) == "table" and obj.class
+end
+
 class_mt.__call = newClass

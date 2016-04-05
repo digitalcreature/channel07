@@ -4,8 +4,9 @@ require "debug2"
 screen = {}
 
 screen.width = 64
-screen.height = 36
+screen.height = 64
 screen.scale = 12	--default window scaling
+screen.ratio = 16 / 9
 
 screen.windowflags = {
 	fullscreen = false,
@@ -25,6 +26,14 @@ screen.fullscreenflags = {
 function screen.load()
 	screen.canvas = love.graphics.newCanvas(screen.width, screen.height);
 	screen.canvas:setFilter("nearest", "nearest")
+end
+
+function screen.getwindowwidth()
+	return screen.width * screen.scale
+end
+
+function screen.getwindowheight()
+	return (screen.height * screen.scale) / screen.ratio
 end
 
 function screen.draw() end
@@ -48,7 +57,7 @@ local keyevent = {}
 function keyevent.f4()
 	local _, _, flags = love.window.getMode()
 	if flags.fullscreen then
-		love.window.setMode(screen.width * screen.scale, screen.height * screen.scale, screen.windowflags)
+		love.window.setMode(screen.getwindowwidth(), screen.getwindowheight(), screen.windowflags)
 	else
 		love.window.setMode(0, 0, screen.fullscreenflags)
 	end

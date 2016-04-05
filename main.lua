@@ -1,3 +1,5 @@
+love.graphics.setDefaultFilter("nearest", "nearest")
+
 require "screen"
 require "player"
 require "color"

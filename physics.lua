@@ -40,7 +40,7 @@ physics.Domain = class() do
 	end
 
 	--callback for processing raycast hits. use ... for userdata
-	local function raycasthitprocessor(startpos, dir, pos, dist, obj, hitindex, axis, ...) end
+	local function raycasthitprocessor(startpos, dir, pos, dist, obj, hitindex, axis, i, j, ...) end
 
 	local hitpos = Vector()
 	local dir = Vector()
@@ -91,7 +91,7 @@ physics.Domain = class() do
 				local obj = physics.Domain.current:get(i, j)
 				if solidpredicate(obj) then
 					hitpos:set(dir):scale(dist):add(pos)
-					hitprocessor(pos, dir, hitpos, dist, obj, hitindex, axis, ...)
+					hitprocessor(pos, dir, hitpos, dist, obj, hitindex, axis, i, j, ...)
 					hitindex = hitindex + 1
 				end
 			end

@@ -14,12 +14,14 @@ require "Tile"
 -- local green = {color = color.green, draw = draw}
 -- local blue = {color = color.blue, draw = draw}
 
+local tile = Tile(Tile.Material.Texture("level/block.png"))
+
 local key = {
 	[1] = player.key,
-	[2] = Tile(),
-	[3] = Tile(),
-	[4] = Tile(),
-	[5] = Tile(),
+	[2] = tile,
+	[3] = tile,
+	[4] = tile,
+	[5] = tile,
 }
 
 return Level.load("level/0.png", key)

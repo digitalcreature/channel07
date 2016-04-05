@@ -22,18 +22,15 @@ function camera.visiblepredicate(obj, x, y)
 	return type(obj) == "table" and not obj.invisible
 end
 
-local function colorize(t, obj)
-	return color.lerp(color.white, color.black, t)
-end
-
-local function drawraycasthit(start, dir, hit, dist, obj, hitindex, axis, scanx, distfactor)
+local function drawraycasthit(start, dir, pos, dist, obj, hitindex, axis, i, j, scanx, distfactor)
 	dist = dist * distfactor
-	love.graphics.setColor(colorize(dist / camera.viewdist, obj))
-	if hitindex == 0 and type(obj) == "table" then
+	love.graphics.setColor(color.lerp(color.white, color.black, dist / camera.viewdist))
+	if hitindex == 0 and class.of(obj) == Tile then
 		love.graphics.push()
-			love.graphics.translate(scanx, (screen.height / 2) + (camera.pos.z - 1))
+			love.graphics.translate(scanx, screen.height / 2)
 			love.graphics.scale(1, screen.height / dist)
-			love.graphics.rectangle("fill", 0, 0, 1, 1)
+			love.graphics.translate(0, camera.pos.z - 1)
+			obj:render(i, j, pos, dist, axis)
 		love.graphics.pop()
 	end
 end

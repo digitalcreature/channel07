@@ -1,24 +1,20 @@
 require "color"
 require "physics"
 require "camera"
-require "vector"
+require "Vector"
 
-player = {
-	x = 0,
-	y = 0,
-	w = 1/3,
-	h = 1/3,
-	nontile = true,
-	--facing direction
-	dir = math.pi,
-	--move speed
-	spdx = 2,
-	spdy = 2,
-	--keyboard look speed (rad/s)
-	lookspd = 1.5,
-	--mouselook sensitivity
-	sensitivity = .003,
-}
+player = physics.Entity(0, 0, 1/3, 1/3)
+
+player.nontile = true
+--facing direction
+player.dir = math.pi
+--move speed
+player.spdx = 2
+player.spdy = 2
+--keyboard look speed (rad/s)
+player.lookspd = 1.5
+--mouselook sensitivity
+player.sensitivity = .003
 
 local function centercursor()
 	local w, h = love.window.getMode()
@@ -35,7 +31,7 @@ function player.key(x, y)
 	return player
 end
 
-local dpos = {}
+local dpos = Vector()
 function player:update(dt)
 	local ddir = 0
 	if love.keyboard.isDown("left") then ddir = ddir + self.lookspd * dt end
@@ -49,14 +45,14 @@ function player:update(dt)
 	end
 	self.dir = self.dir + ddir
 	camera:setangle(self.dir)
-	vector.copy(dpos, 0, 0)
+	dpos:set(0, 0)
 	if love.keyboard.isDown("w", "up") then dpos.y = dpos.y - self.spdy * dt end
 	if love.keyboard.isDown("s", "down") then dpos.y = dpos.y + self.spdy * dt end
 	if love.keyboard.isDown("a") then dpos.x = dpos.x - self.spdx * dt end
 	if love.keyboard.isDown("d") then dpos.x = dpos.x + self.spdx * dt end
-	vector.copy(dpos, vector.rotate(dpos, self.dir - (math.pi / 2)))
-	physics.moveentity(self, dpos.x, dpos.y, level.current)
-	vector.copy(camera.pos, self:center())
+	dpos:rotate2d(self.dir - (math.pi / 2))
+	self:move(dpos:xy())
+	camera.pos:set(self:center())
 end
 
 function player:draw()

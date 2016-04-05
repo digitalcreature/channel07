@@ -1,4 +1,4 @@
-require "level"
+require "Level"
 require "color"
 require "player"
 
@@ -21,4 +21,4 @@ local key = {
 	[5] = blue,
 }
 
-return level.loadLevel("level/0.png", key)
+return Level.load("level/0.png", key)

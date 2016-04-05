@@ -1,14 +1,14 @@
 require "screen"
-require "level"
 require "player"
 require "color"
-require "vector"
 require "camera"
 require "debug2"
 
+require "Level"
+
 function love.load(arg)
 	screen.load()
-	level.current = require "level.0"
+	Level.setcurrent(require "level.0")
 	player:load()
 end
 

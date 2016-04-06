@@ -43,11 +43,12 @@ function player:update(dt)
 	self.dir = self.dir + ddir
 	camera:setangle(self.dir)
 	dpos:set(0, 0)
-	if love.keyboard.isDown("w", "up") then dpos.y = dpos.y - self.spdy * dt end
-	if love.keyboard.isDown("s", "down") then dpos.y = dpos.y + self.spdy * dt end
-	if love.keyboard.isDown("a") then dpos.x = dpos.x - self.spdx * dt end
-	if love.keyboard.isDown("d") then dpos.x = dpos.x + self.spdx * dt end
+	if love.keyboard.isDown("w", "up") then dpos.y = dpos.y - self.spdy end
+	if love.keyboard.isDown("s", "down") then dpos.y = dpos.y + self.spdy end
+	if love.keyboard.isDown("a") then dpos.x = dpos.x - self.spdx end
+	if love.keyboard.isDown("d") then dpos.x = dpos.x + self.spdx end
 	dpos:rotate2d(self.dir - (math.pi / 2))
+	dpos:scale(dt)
 	self:move(dpos:xy())
 	camera.pos:set(self:center())
 end

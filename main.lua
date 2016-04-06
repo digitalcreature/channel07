@@ -8,11 +8,16 @@ require "debug2"
 require "pause"
 
 require "Level"
+require "Billboard"
 
+local pos, skaia
 function love.load(arg)
 	screen.load()
 	Level.setcurrent(require "level.0")
 	player:load()
+	skaia = Billboard("skaia.png")
+	pos = Vector(player:center())
+	pos.z = .5
 end
 
 function love.update(dt)
@@ -23,7 +28,9 @@ end
 
 function screen.draw()
 	love.graphics.clear()
-	camera:draw()
+	camera:render()
+	skaia:render(pos)
+	render:draw()
 end
 
 -- function debug.draw()

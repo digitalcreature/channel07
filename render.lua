@@ -6,7 +6,7 @@ require "Pool"
 
 render = {}
 
-render.maxdist = 3
+render.maxdist = 8
 
 render.RenderCall = class() do
 
@@ -24,7 +24,7 @@ render.RenderCall = class() do
 	end
 
 	function base:__call()
-		self.obj:render(self.pos, self.dist, self.scanx, self.i, self.j, self.axis)
+		self.obj:draw(self.pos, self.dist, self.scanx, self.i, self.j, self.axis)
 	end
 
 	function render.RenderCall.bydist(a, b)
@@ -48,7 +48,7 @@ function render.draw()
 	love.graphics.setColor(color.white)
 	for i = 1, #render.calls do
 		local call = render.calls[i]
-		if call.dist < render.maxdist then
+		if call.dist > 0 and call.dist < render.maxdist then
 			love.graphics.setColor(color.lerp(color.white, color.black, call.dist / render.maxdist))
 			call()
 		end

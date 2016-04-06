@@ -5,7 +5,7 @@ screen = {}
 
 screen.width = 64
 screen.height = 64
-screen.scale = 12	--default window scaling
+screen.scale = 10	--default window scaling
 screen.ratio = 16 / 9
 
 screen.windowflags = {

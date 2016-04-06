@@ -49,6 +49,14 @@ Vector = class() do
 		return self
 	end
 
+	function base:sub(x, y, z)
+		local x, y, z = args(x, y, z)
+		self.x = self.x - x
+		self.y = self.y - y
+		self.z = self.z - z
+		return self
+	end
+
 	function base:scale(x, y, z)
 		local x, y, z = args(x, y, z)
 		y = y or x
@@ -81,7 +89,10 @@ Vector = class() do
 	end
 
 	function base:__tostring()
-		return "<"..self.x..", "..self.y..", "..self.z..">"
+		local x = math.floor(self.x * 100) / 100
+		local y = math.floor(self.y * 100) / 100
+		local z = math.floor(self.z * 100) / 100
+		return "<"..x..", "..y..", "..z..">"
 	end
 
 	function base.__eq(a, b)

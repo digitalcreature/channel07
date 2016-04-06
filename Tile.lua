@@ -10,7 +10,7 @@ Tile = class() do
 		self.material = material or Tile.Material()
 	end
 
-	function base:render(pos, dist, scanx, i, j, axis)
+	function base:draw(pos, dist, scanx, i, j, axis)
 		love.graphics.push()
 			love.graphics.translate(scanx, screen.height / 2)
 			love.graphics.scale(1, screen.height / dist)
@@ -54,6 +54,7 @@ Tile = class() do
 				if type(texture) == "string" then
 					texture = love.graphics.newImage(texture)
 				end
+				texture:setWrap("clampzero", "clampzero")
 				local w = texture:getWidth()
 				self.quadcount = w
 				self.quads = {}

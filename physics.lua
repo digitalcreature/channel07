@@ -117,7 +117,7 @@ physics.Entity = class() do
 		local inc
 		while dx ~= 0 or dy ~= 0 do
 			if dx ~= 0 then
-				inc = math.abs(dx) < 1 and dx or sign(dx)
+				inc = math.abs(dx) < 1 and dx or math.sign(dx)
 				self.x = self.x + inc
 				if (self:checkrect(solidpredicate)) then
 					local x
@@ -133,7 +133,7 @@ physics.Entity = class() do
 				end
 			end
 			if dy ~= 0 then
-				inc = math.abs(dy) < 1 and dy or sign(dy)
+				inc = math.abs(dy) < 1 and dy or math.sign(dy)
 				self.y = self.y + inc
 				if (self:checkrect(solidpredicate)) then
 					local y

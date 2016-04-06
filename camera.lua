@@ -19,6 +19,19 @@ function camera:getangle()
 	return self.dir:angle2d()
 end
 
+local temp = Vector()
+--return distance to world point
+function camera:getdist(pos)
+	return temp:set(pos):sub(self.pos):projectscalar(self.dir)
+end
+
+--return scanx position of world point
+function camera:getscanx(pos, dist)
+	dist = dist or self:getdist(pos)
+	local x = temp:set(pos):sub(self.pos):projectscalar(self.plane)
+	return ((x / (dist * self.plane:len()) + 1) / 2) * screen.width
+end
+
 function camera.visiblepredicate(obj)
 	return type(obj) == "table" and not obj.invisible
 end
@@ -34,10 +47,11 @@ local function drawraycasthit(start, dir, pos, dist, obj, hitindex, axis, i, j, 
 end
 
 local dir = Vector()
-function camera:draw()
+function camera:render()
 	local inc = 2 / screen.width
 	local i = -1
 	local scanx = 0
+	-- self.pos.z = math.cos(love.timer.getTime() * 8) / 8 + .6
 	while i < 1 do
 		dir:set(self.plane):scale(i):add(self.dir):norm()
 		local distfactor = dir:projectscalar(self.dir)
@@ -45,5 +59,4 @@ function camera:draw()
 		i = i + inc
 		scanx = scanx + 1
 	end
-	render.draw()
 end

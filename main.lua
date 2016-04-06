@@ -15,7 +15,7 @@ function love.load(arg)
 	screen.load()
 	Level.setcurrent(require "level.0")
 	player:load()
-	skaia = Billboard("skaia.png")
+	billboard = Billboard("love.png")
 	pos = Vector(player:center())
 	pos.z = .5
 end
@@ -29,7 +29,7 @@ end
 function screen.draw()
 	love.graphics.clear()
 	camera:render()
-	skaia:render(pos)
+	billboard:render(pos)
 	render:draw()
 end
 

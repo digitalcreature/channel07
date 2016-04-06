@@ -6,6 +6,7 @@ require "Pool"
 
 render = {}
 
+render.mindist = 0
 render.maxdist = 8
 
 render.RenderCall = class() do
@@ -45,11 +46,10 @@ end
 --execute render calls
 function render.draw()
 	table.sort(render.calls, render.RenderCall.bydist)	--depth sort; further away objects are rendered first
-	love.graphics.setColor(color.white)
 	for i = 1, #render.calls do
 		local call = render.calls[i]
-		if call.dist > 0 and call.dist < render.maxdist then
-			love.graphics.setColor(color.lerp(color.white, color.black, call.dist / render.maxdist))
+		if call.dist > render.mindist and call.dist < render.maxdist then
+			love.graphics.setColor(color.lerp(color.white, color.black, (call.dist - render.mindist) / (render.maxdist - render.mindist)))
 			call()
 		end
 		render.callpool:checkin(call)

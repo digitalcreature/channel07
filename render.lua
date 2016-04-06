@@ -45,6 +45,7 @@ end
 
 --execute render calls
 function render.draw()
+	love.graphics.clear(color.black)
 	table.sort(render.calls, render.RenderCall.bydist)	--depth sort; further away objects are rendered first
 	for i = 1, #render.calls do
 		local call = render.calls[i]

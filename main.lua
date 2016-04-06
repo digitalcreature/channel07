@@ -7,6 +7,7 @@ require "camera"
 require "debug2"
 require "pause"
 
+require "State"
 require "Level"
 require "Billboard"
 
@@ -22,15 +23,12 @@ end
 
 function love.update(dt)
 	if not pause.paused then
-		player:update(dt)
+		State.current:update(dt)
 	end
 end
 
 function screen.draw()
-	love.graphics.clear()
-	camera:render()
-	Level.current:renderbillboards()
-	render:draw()
+	State.current:draw()
 end
 
 function love.keypressed(key)

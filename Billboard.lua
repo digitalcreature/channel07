@@ -10,8 +10,8 @@ Billboard = class() do
 	function base:init(image, width, height, originx, originy)
 		self.width = width or 1
 		self.height = height or 1
-		self.originx = originx or 1/2
-		self.originy = originy or 1/2
+		self.originx = originx or self.width / 2
+		self.originy = originy or self.height / 2
 		if type(image) == "string" then
 			image = love.graphics.newImage(image)
 		end

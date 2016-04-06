@@ -29,28 +29,9 @@ end
 function screen.draw()
 	love.graphics.clear()
 	camera:render()
-	billboard:render(pos)
+	Level.current:renderbillboards()
 	render:draw()
 end
-
--- function debug.draw()
--- 	local scale = 10
--- 	love.graphics.push()
--- 		love.graphics.scale(scale, scale)
--- 		for x = 0, level.current.width - 1 do
--- 			for y = 0, level.current.height - 1 do
--- 				local obj = level.current[x][y]
--- 				if obj then
--- 					love.graphics.push()
--- 						love.graphics.translate(x, y)
--- 						obj:draw()
--- 					love.graphics.pop()
--- 				end
--- 			end
--- 		end
--- 		player:draw()
--- 	love.graphics.pop()
--- end
 
 function love.keypressed(key)
 	return screen.keypressed(key) or pause.keypressed(key)

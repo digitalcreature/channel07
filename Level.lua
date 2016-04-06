@@ -1,5 +1,9 @@
 require "oop"
 require "physics"
+require "render"
+
+require "Vector"
+require "Billboard"
 
 Level = subclass(physics.Domain) do
 
@@ -7,6 +11,18 @@ Level = subclass(physics.Domain) do
 
 	function	base:init(width, height)
 		base.super.init(self, width, height)
+	end
+
+	local pos = Vector()
+	function base:renderbillboards()
+		for x = 0, self.width - 1 do
+			for y = 0, self.height - 1 do
+				local obj = self[x][y]
+				if type(obj) == "table" and obj.class == Billboard then
+					obj:render(pos:set(x + .5, y + .5, .5))
+				end
+			end
+		end
 	end
 
 	function Level.setcurrent(level)

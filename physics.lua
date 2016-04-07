@@ -205,7 +205,7 @@ physics.Entity = class() do
 	end
 
 	function base:center()
-		return self.x + self.w / 2, self.y + self.h / 2
+		return self.x + self.w / 2, self.y + self.h / 2, 0
 	end
 
 	function physics.Entity:getkey()

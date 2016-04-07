@@ -50,7 +50,8 @@ function player:update(dt)
 	dpos:rotate2d(self.dir - (math.pi / 2))
 	dpos:scale(dt)
 	self:move(dpos:xy())
-	camera.pos:set(self:center())
+	local x, y = self:center()
+	camera.pos:set(x, y)
 end
 
 function player:render()

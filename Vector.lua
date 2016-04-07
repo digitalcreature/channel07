@@ -67,6 +67,19 @@ Vector = class() do
 		return self
 	end
 
+	function base:dist2(x, y, z)
+		local x, y, z = args(x, y, z)
+		x = x - self.x
+		y = y - self.y
+		z = z - self.z
+		return x * x + y * y + z * z
+	end
+
+	function base:dist(x, y, z)
+		local x, y, z = args(x, y, z)
+		return math.sqrt(self:dist2(x, y, z))
+	end
+
 	function base:dot(x, y, z)
 		local x, y, z = args(x, y, z)
 		return self.x * x + self.y * y + self.z * z

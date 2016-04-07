@@ -21,17 +21,19 @@ Billboard = class() do
 		end
 		self.image = image
 		self.quads = {}
-		for i = 0, frames - 1 do
-			self.quads[i] = love.graphics.newQuad(i * width, 0, width, height, width * frames, height)
+		for i = 1, frames do
+			self.quads[i] = love.graphics.newQuad((i - 1) * width, 0, width, height, width * frames, height)
 		end
 		self.nonsolid = true		--dont collide with entities
 		self.invisible = true	--dont hit with camera raycast
 	end
 
-	function base:render(x, y, z)
-		local info = tablepool:checkout()
+	function base:render(x, y, z, animfps)
+		local info = {}
 		Vector.set(info, x, y, z)
 		info.dist, info.scanx = camera:getscreenpoint(x, y, z)
+		info.nofog = self.nofog
+		info.animfps = animfps or 30
 		render.render(self, info)
 	end
 
@@ -42,7 +44,8 @@ Billboard = class() do
 			local x = -self.originx
 			local y = camera.pos.z - info.z - self.originy
 			love.graphics.translate(x, y)
-			love.graphics.draw(self.image, self.quads[0], 0, 0)
+			local frame = math.floor((love.timer.getTime() * info.animfps) % #self.quads) + 1
+			love.graphics.draw(self.image, self.quads[frame], 0, 0)
 		love.graphics.pop()
 	end
 

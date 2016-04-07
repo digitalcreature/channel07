@@ -4,7 +4,6 @@ require "screen"
 require "player"
 require "color"
 require "camera"
-require "debug2"
 require "pause"
 
 require "State"

@@ -43,11 +43,14 @@ function render.draw()
 	table.sort(render.calls, render.DrawCall.bydist)	--depth sort; further away objects are rendered first
 	for i = 1, #render.calls do
 		local call = render.calls[i]
-		if call.info.dist > render.mindist and call.info.dist < render.maxdist then
-			love.graphics.setColor(color.lerp(color.white, color.black, (call.info.dist - render.mindist) / (render.maxdist - render.mindist)))
+		if call.info.dist > 0 then
+			if not call.info.nofog then
+				love.graphics.setColor(color.lerp(color.white, color.black, (call.info.dist - render.mindist) / (render.maxdist - render.mindist)))
+			else
+				love.graphics.setColor(color.white)
+			end
 			call()
 		end
-		tablepool:checkin(call.info)
 		render.callpool:checkin(call)
 		render.calls[i] = nil
 	end

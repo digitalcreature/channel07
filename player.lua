@@ -53,14 +53,5 @@ function player:update(dt)
 	camera.pos:set(self:center())
 end
 
-function player:draw()
-	love.graphics.push()
-		love.graphics.translate(self.x, self.y)
-		love.graphics.setColor(color.blue)
-		love.graphics.rectangle("fill", 0, 0, self.w, self.h)
-	love.graphics.pop()
-end
-
-function player:center()
-	return self.x + self.w / 2, self.y + self.h / 2
+function player:render()
 end

@@ -4,6 +4,7 @@ require "render"
 
 require "State"
 require "Vector"
+require "Tile"
 require "Billboard"
 
 Level = subclass(State) do
@@ -15,26 +16,20 @@ Level = subclass(State) do
 	end
 
 	function base:update(dt)
-		player:update(dt)
+		self.domain:update(dt)
 	end
 
 	function base:draw()
 		love.graphics.clear()
 		camera:render()
-		self:renderbillboards()
-		render:draw()
-	end
-
-	local pos = Vector()
-	function base:renderbillboards()
-		for x = 0, self.domain.width - 1 do
-			for y = 0, self.domain.height - 1 do
-				local obj = self.domain[x][y]
-				if type(obj) == "table" and obj.class == Billboard then
-					obj:render(x + .5, y + .5, 0)
-				end
+		player:render()
+		for i = 1, #self.domain.entities do
+			local entity = self.domain.entities[i]
+			if not self.domain.inactive[entity] and entity.render then
+				entity:render()
 			end
 		end
+		render:draw()
 	end
 
 	function Level.setcurrent(level)
@@ -70,8 +65,11 @@ Level = subclass(State) do
 					obj = obj(x, y)
 				end
 				if type(obj) == "table" then
-					if not obj.nontile then
+					if instanceof(obj, Tile) then
 						level.domain:set(x, y, obj)
+					end
+					if instanceof(obj, physics.Entity) then
+						level.domain:addentity(obj)
 					end
 				else
 					level.domain:set(x, y, obj)

@@ -14,6 +14,8 @@ physics.Domain = class() do
 		for i = 0, width - 1 do
 			self[i] = {}
 		end
+		self.entities = {}
+		self.inactive = {}
 	end
 
 	function physics.Domain.setcurrent(domain)
@@ -25,6 +27,29 @@ physics.Domain = class() do
 			i >= 0 and j >= 0 and
 			i < self.width and
 			j < self.height
+	end
+
+	function base:addentity(entity)
+		table.insert(self.entities, entity)
+	end
+
+	function base:removeentity(entity)
+		self.inactive[entity] = true
+	end
+
+	function base:update(dt)
+		for i = 1, #self.entities do
+			local entity = self.entities[i]
+			if not self.inactive[entity] and entity.update then entity:update(dt) end
+		end
+		for entity in pairs(self.inactive) do
+			for i = 1, #self.entities do
+				if self.entities[i] == entity then
+					table.remove(self.entities, i)
+				end
+			end
+		end
+		self.inactive = {}
 	end
 
 	function base:get(i, j, tile)
@@ -177,6 +202,19 @@ physics.Entity = class() do
 			self.y or 0,
 			self.w or 0,
 			self.h or 0
+	end
+
+	function base:center()
+		return self.x + self.w / 2, self.y + self.h / 2
+	end
+
+	function physics.Entity:getkey()
+		return function (i, j)
+			local obj = self()
+			obj.x = i - (obj.w / 2) + .5
+			obj.y = j - (obj.h / 2) + .5
+			return obj
+		end
 	end
 
 end

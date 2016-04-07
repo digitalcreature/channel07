@@ -1,5 +1,4 @@
 require "color"
-require "debug2"
 
 screen = {}
 
@@ -46,14 +45,18 @@ function love.draw()
 	love.graphics.setColor(color.white)
 	local w, h = love.window.getMode()
 	love.graphics.draw(screen.canvas, 0, 0, 0, w / screen.width, h / screen.height)
-	if (debug.draw) then debug.draw() end
-	if debug.showfps then
+	if screen.showfps then
 		love.graphics.setColor(color.white)
 		love.graphics.print((math.floor(1 / love.timer.getDelta())).."FPS\n"..(love.timer.getFPS().."FPS"), 0, 0)
 	end
 end
 
 local keyevent = {}
+
+function keyevent.f3()
+	screen.showfps = not screen.showfps
+end
+
 function keyevent.f4()
 	local _, _, flags = love.window.getMode()
 	if flags.fullscreen then

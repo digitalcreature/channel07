@@ -2,6 +2,8 @@ require "math2"
 
 color = {}
 
+color.clear = {0, 0, 0, 0,}
+
 color.black = {0, 0, 0}
 color.white = {255, 255, 255}
 

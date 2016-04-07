@@ -27,9 +27,17 @@ function screen.draw()
 end
 
 function love.keypressed(key)
-	return screen.keypressed(key) or pause.keypressed(key)
+	return screen.keypressed(key) or pause.keypressed(key) or State.current:keypressed(key)
+end
+
+function love.keyreleased(key)
+	return State.current:keyreleased(key)
 end
 
 function love.mousepressed(x, y, button)
-	return pause.mousepressed(x, y, button)
+	return pause.mousepressed(x, y, button) or State.current:mousepressed(x, y, button)
+end
+
+function love.mousereleased(x, y, button)
+	return State.current:mousereleased(x, y, button)
 end

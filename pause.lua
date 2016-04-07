@@ -30,9 +30,11 @@ end
 local mouseevent = {}
 
 mouseevent[1] =  function(x, y)
-	pause.setpaused(false)
-	screen.centercursor()
-	return true
+	if pause.paused then
+		pause.setpaused(false)
+		screen.centercursor()
+		return true
+	end
 end
 
 function pause.mousepressed(x, y, button)

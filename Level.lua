@@ -1,6 +1,7 @@
 require "oop"
 require "physics"
 require "render"
+require "ui"
 
 require "State"
 require "Vector"
@@ -17,6 +18,7 @@ Level = subclass(State) do
 
 	function base:update(dt)
 		self.domain:update(dt)
+		ui:update(dt)
 	end
 
 	function base:draw()
@@ -30,6 +32,11 @@ Level = subclass(State) do
 			end
 		end
 		render:draw()
+		ui:draw()
+	end
+
+	function base:mousepressed()
+		player:takedamage()
 	end
 
 	function Level.setcurrent(level)
@@ -78,5 +85,6 @@ Level = subclass(State) do
 		end
 		return level
 	end
+
 
 end

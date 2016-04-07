@@ -31,7 +31,7 @@ Level = subclass(State) do
 			for y = 0, self.domain.height - 1 do
 				local obj = self.domain[x][y]
 				if type(obj) == "table" and obj.class == Billboard then
-					obj:render(pos:set(x + .5, y + .5, .5))
+					obj:render(x + .5, y + .5, 0)
 				end
 			end
 		end

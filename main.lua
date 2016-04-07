@@ -11,14 +11,10 @@ require "State"
 require "Level"
 require "Billboard"
 
-local pos, skaia
 function love.load(arg)
 	screen.load()
 	Level.setcurrent(require "level.0")
 	player:load()
-	billboard = Billboard("love.png")
-	pos = Vector(player:center())
-	pos.z = .5
 end
 
 function love.update(dt)

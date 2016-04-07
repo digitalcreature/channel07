@@ -6,79 +6,90 @@ Tile = class() do
 
 	local base = Tile
 
-	function base:init(material)
-		self.material = material or Tile.Material()
-	end
+	function base:init() end
 
-	function base:draw(pos, dist, scanx, i, j, axis)
+	function base:draw(info)
 		love.graphics.push()
-			love.graphics.translate(scanx, screen.height / 2)
-			love.graphics.scale(1, screen.height / dist)
-			love.graphics.translate(0, - 1 - pos.z + camera.pos.z)
-			self.material:shader(self, i, j, pos, dist, axis)
+			love.graphics.translate(info.scanx, screen.height / 2)
+			love.graphics.scale(1, screen.height / info.dist)
+			love.graphics.translate(0, - 1 - info.z + camera.pos.z)
+			self:shader(info)
 		love.graphics.pop()
 	end
 
-	Tile.Material = class() do
+	function base:shader(info)
+		error("tile without shader:", self, "render info: ", info)
+	end
 
-		local base = Tile.Material
+end
 
-		function base:init()
+ColorTile = subclass(Tile) do
+
+	local base = ColorTile
+
+	function base:init(xcolor, ycolor)
+		base.super.init(self)
+		self.xcolor = xcolor or color.white
+		self.ycolor = ycolor or self.xcolor
+	end
+
+	function base:shader(info)
+		if info.acis == "x" then
+			love.graphics.setColor(self.xcolor)
+		else
+			love.graphics.setColor(self.ycolor)
 		end
+		love.graphics.rectangle("fill", 0, 0, 1, 1)
+	end
 
-		function base:shader(tile, i, j, pos, dist, axis)
-			love.graphics.rectangle("fill", 0, 0, 1, 1)
+end
+
+TextureTile = subclass(Tile) do
+
+	local base = TextureTile
+
+	function base:init(xtex, ytex)
+		base.super.init(self)
+		if type(xtex) == "string" then
+			xtex = love.graphics.newImage(xtex, format)
 		end
-
-		Tile.Material.Color = subclass(Tile.Material) do
-
-			local base = Tile.Material.Color
-
-			function base:init(color)
-				base.super.init(self)
-				self.color = color or color.white
-			end
-
-			function base:shader(tile, i, j, pos, dist, axis)
-				love.graphics.setColor(self.color)
-				love.graphics.rectangle("fill", 0, 0, 1, 1)
-			end
-
+		if type(ytex) == "string" then
+			ytex = love.graphics.newImage(ytex, format)
 		end
-
-		Tile.Material.Texture = subclass(Tile.Material) do
-
-			local base = Tile.Material.Texture
-
-			function base:init(texture)
-				if type(texture) == "string" then
-					texture = love.graphics.newImage(texture)
-				end
-				texture:setWrap("clampzero", "clampzero")
-				local w = texture:getWidth()
-				self.quadcount = w
-				self.quads = {}
-				self.texture = texture
-				for i = 0, w - 1 do
-					self.quads[i] = love.graphics.newQuad(i, 0, 1, 1, w, 1)
-				end
-			end
-
-			function base:shader(tile, i, j, pos, dist, axis)
-				local u
-				if axis == "x" then
-					u = pos.y - j
-					-- love.graphics.setColor(128, 128, 128)
-				else
-					-- love.graphics.setColor(color.white)
-					u = pos.x - i
-				end
-				local quad = self.quads[math.floor(u * self.quadcount)]
-				love.graphics.draw(self.texture, quad)
-			end
-
+		self.xtex = xtex
+		local xw = xtex:getWidth()
+		self.xquadcount = xw
+		self.xquads = {}
+		for i = 0, xw - 1 do
+			self.xquads[i] = love.graphics.newQuad(i, 0, 1, 1, xw, 1)
 		end
+		if (ytex) then
+			self.ytex = ytex
+			local yw = ytex:getWidth()
+			self.yquadcount = yw
+			self.yquads = {}
+			for i = 0, yw - 1 do
+				self.yquads[i] = love.graphics.newQuad(i, 0, 1, 1, yw, 1)
+			end
+		else
+			self.ytex = xtex
+			self.yquadcount = self.xquadcount
+			self.yquads = self.xquads
+		end
+	end
 
+	function base:shader(info)
+		if info.axis == "x" then
+			local u = info.y - info.j
+			if info.sign < 0 then u = 1 - u end
+			local quad = self.xquads[math.floor(u * self.xquadcount)]
+			love.graphics.draw(self.xtex, quad)
+		else
+			local u = info.x - info.i
+			if info.sign > 0 then u = 1 - u end
+			local quad = self.yquads[math.floor(u * self.yquadcount)]
+			love.graphics.draw(self.ytex, quad)
+		end
 	end
 
 end

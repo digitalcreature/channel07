@@ -10,7 +10,7 @@ screen.ratio = 16 / 9
 
 screen.windowflags = {
 	fullscreen = false,
-	vsync = false,
+	vsync = true,
 	resizable = true,
 	centered = true,
 	minwidth = screen.width,
@@ -49,7 +49,7 @@ function love.draw()
 	if (debug.draw) then debug.draw() end
 	if debug.showfps then
 		love.graphics.setColor(color.white)
-		love.graphics.print(math.floor(1 / love.timer.getDelta()).."FPS", 0, 0)
+		love.graphics.print((math.floor(1 / love.timer.getDelta())).."FPS\n"..(love.timer.getFPS().."FPS"), 0, 0)
 	end
 end
 
@@ -62,6 +62,12 @@ function keyevent.f4()
 		love.window.setMode(0, 0, screen.fullscreenflags)
 	end
 	return true
+end
+
+function keyevent.f6()
+	local w, h, f = love.window.getMode()
+	f.vsync = not f.vsync
+	love.window.setMode(w, h, f)
 end
 
 function screen.keypressed(key)

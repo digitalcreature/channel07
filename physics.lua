@@ -40,7 +40,7 @@ physics.Domain = class() do
 	end
 
 	--callback for processing raycast hits. use ... for userdata
-	local function raycasthitprocessor(startpos, dir, pos, dist, obj, hitindex, axis, i, j, ...) end
+	local function raycasthitprocessor(startpos, dir, pos, dist, obj, hitindex, axis, sign, i, j, ...) end
 
 	local hitpos = Vector()
 	local dir = Vector()
@@ -91,7 +91,13 @@ physics.Domain = class() do
 				if not self:inbounds(i, j) then break end
 				if solidpredicate(obj) then
 					hitpos:set(dir):scale(dist):add(pos)
-					hitprocessor(pos, dir, hitpos, dist, obj, hitindex, axis, i, j, ...)
+					local sign
+					if axis == "x" then
+						sign = di
+					else
+						sign = dj
+					end
+					hitprocessor(pos, dir, hitpos, dist, obj, hitindex, axis, sign, i, j, ...)
 					hitindex = hitindex + 1
 					if not passablepredicate or not passablepredicate(obj) then break end
 				end

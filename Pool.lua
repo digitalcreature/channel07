@@ -6,8 +6,8 @@ Pool = class() do
 
 	function base:init(objclass, count)
 		self.objclass = objclass
-		for i = 1, count do
-			self[i] = self.objclass()
+		for i = 1, count or 0 do
+			self[i] = self.objclass and self.objclass() or {}
 		end
 	end
 
@@ -18,15 +18,16 @@ Pool = class() do
 			if obj.init then obj:init(...) end
 			return obj
 		else
-			print("new")
-			return self.objclass(...)
+			return self.objclass and self.objclass(...) or {}
 		end
 	end
 
 	function base:checkin(obj)
-		if obj.class == self.objclass then
+		if not self.objclass or instanceof(obj, objclass) then
 			self[#self + 1] = obj
 		end
 	end
 
 end
+
+tablepool = Pool()

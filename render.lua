@@ -9,50 +9,45 @@ render = {}
 render.mindist = 0
 render.maxdist = 8
 
-render.RenderCall = class() do
+render.DrawCall = class() do
 
-	local base = render.RenderCall
+	local base = render.DrawCall
 
-	function base:init(obj, pos, dist, scanx, i, j, axis)
+	function base:init(obj, info)
 		self.obj = obj
-		if not self.pos then self.pos = Vector() end
-		self.pos:set(pos)
-		self.i = i
-		self.j = j
-		self.dist = dist		--distance of object from camera
-		self.scanx = scanx	--horizontal scanline index, 0 <= scanx < screen.width
-		self.axis = axis		--x or y axis of hit
+		self.info = info
 	end
 
 	function base:__call()
-		self.obj:draw(self.pos, self.dist, self.scanx, self.i, self.j, self.axis)
+		self.obj:draw(self.info)
 	end
 
-	function render.RenderCall.bydist(a, b)
-		return a.dist > b.dist
+	function render.DrawCall.bydist(a, b)
+		return a.info.dist > b.info.dist
 	end
 
 end
 
-render.callpool = Pool(render.RenderCall, screen.width * 10)
+render.callpool = Pool(render.DrawCall, screen.width * 10)
 render.calls = {}
 
 --log a render call
-function render.render(obj, pos, dist, scanx, i, j, axis)
-	local call = render.callpool:checkout(obj, pos, dist, scanx, i, j, axis)
+function render.render(obj, info)
+	local call = render.callpool:checkout(obj, info)
 	table.insert(render.calls, call)
 end
 
 --execute render calls
 function render.draw()
 	love.graphics.clear(color.black)
-	table.sort(render.calls, render.RenderCall.bydist)	--depth sort; further away objects are rendered first
+	table.sort(render.calls, render.DrawCall.bydist)	--depth sort; further away objects are rendered first
 	for i = 1, #render.calls do
 		local call = render.calls[i]
-		if call.dist > render.mindist and call.dist < render.maxdist then
-			love.graphics.setColor(color.lerp(color.white, color.black, (call.dist - render.mindist) / (render.maxdist - render.mindist)))
+		if call.info.dist > render.mindist and call.info.dist < render.maxdist then
+			love.graphics.setColor(color.lerp(color.white, color.black, (call.info.dist - render.mindist) / (render.maxdist - render.mindist)))
 			call()
 		end
+		tablepool:checkin(call.info)
 		render.callpool:checkin(call)
 		render.calls[i] = nil
 	end

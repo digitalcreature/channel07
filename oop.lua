@@ -25,11 +25,18 @@ local function newClass(_, super)
 	class.base = class
 	class.extend = subclass --syntactic sugar: "super:extend()" := "subclass(super)"
 	class.__index = class
+	class.is = instanceof
 	return class
 end
 
-function class.of(obj)
-	return type(obj) == "table" and obj.class
+function instanceof(obj, class)
+	if type(obj) == "table" then
+		local objclass = obj.class
+		repeat
+			if objclass == class then return true end
+			objclass = objclass.super
+		until not objclass
+	end
 end
 
 class_mt.__call = newClass

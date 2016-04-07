@@ -1,6 +1,7 @@
 require "physics"
 require "render"
 
+require "Pool"
 require "Vector"
 
 camera = {
@@ -20,16 +21,12 @@ function camera:getangle()
 end
 
 local temp = Vector()
---return distance to world point
-function camera:getdist(pos)
-	return temp:set(pos):sub(self.pos):projectscalar(self.dir)
-end
-
---return scanx position of world point
-function camera:getscanx(pos, dist)
-	dist = dist or self:getdist(pos)
-	local x = temp:set(pos):sub(self.pos):projectscalar(self.plane)
-	return ((x / (dist * self.plane:len()) + 1) / 2) * screen.width
+function camera:getscreenpoint(x, y, z)
+	local dist = temp:set(x, y, z):sub(self.pos):projectscalar(self.dir)
+	local scanx = temp:set(x, y, z):sub(self.pos):projectscalar(self.plane)
+	scanx = ((scanx / (dist * self.plane:len()) + 1) / 2) * screen.width
+	local screeny = self.pos.z - z
+	return dist, scanx, screeny
 end
 
 function camera.visiblepredicate(obj)
@@ -40,22 +37,30 @@ function camera.transparentpredicate(obj)
 	return type(obj) == "table" and obj.transparent
 end
 
-local function drawraycasthit(start, dir, pos, dist, obj, hitindex, axis, i, j, scanx, distfactor)
+local function drawraycasthit(start, dir, pos, dist, obj, hitindex, axis, sign, i, j, scanx, distfactor)
 	dist = dist * distfactor
-	pos.z = 0
-	render.render(obj, pos, dist, scanx, i, j, axis)
+	local info = tablepool:checkout()
+	info.x, info.y, info.z = pos.x, pos.y, 0
+	info.dist = dist
+	info.scanx = scanx
+	info.i, info.j = i, j
+	info.axis = axis
+	info.sign = sign
+	render.render(obj, info)
 end
 
-local dir = Vector()
+local dir, pos = Vector(), Vector()
 function camera:render()
 	local inc = 2 / screen.width
 	local i = -1
 	local scanx = 0
 	-- self.pos.z = math.cos(love.timer.getTime() * 8) / 8 + .6
+	pos:set(self.pos)
+	pos.z = 0
 	while i < 1 do
 		dir:set(self.plane):scale(i):add(self.dir):norm()
 		local distfactor = dir:projectscalar(self.dir)
-		physics.Domain.current:raycast(self.pos, dir, render.maxdist + 1, drawraycasthit, self.visiblepredicate, self.transparentpredicate, scanx, distfactor)
+		physics.Domain.current:raycast(pos, dir, render.maxdist + 1, drawraycasthit, self.visiblepredicate, self.transparentpredicate, scanx, distfactor)
 		i = i + inc
 		scanx = scanx + 1
 	end

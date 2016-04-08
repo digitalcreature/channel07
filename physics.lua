@@ -34,22 +34,23 @@ physics.Domain = class() do
 	end
 
 	function base:removeentity(entity)
-		self.inactive[entity] = true
+		table.insert(self.inactive, entity)
 	end
 
 	function base:update(dt)
 		for i = 1, #self.entities do
 			local entity = self.entities[i]
-			if not self.inactive[entity] and entity.update then entity:update(dt) end
+			if not entity:isinactive() and entity.update then entity:update(dt) end
 		end
-		for entity in pairs(self.inactive) do
+		for i = 1, #self.inactive do
+			local entity = self.inactive[i]
 			for i = 1, #self.entities do
 				if self.entities[i] == entity then
 					table.remove(self.entities, i)
 				end
 			end
+			self.inactive[i] = nil
 		end
-		self.inactive = {}
 	end
 
 	function base:get(i, j, tile)
@@ -124,7 +125,7 @@ physics.Domain = class() do
 					end
 					hitprocessor(pos, dir, hitpos, dist, obj, hitindex, axis, sign, i, j, ...)
 					hitindex = hitindex + 1
-					if not passablepredicate or not passablepredicate(obj) then break end
+					if passablepredicate and not passablepredicate(obj) then break end
 				end
 			end
 		end
@@ -141,6 +142,31 @@ physics.Entity = class() do
 		self.y = y or 0
 		self.w = w or 0
 		self.h = h or 0
+	end
+
+	function base:isinactive(domain)
+		domain = domain or physics.Domain.current
+		if domain then
+			for i = 1, #domain.inactive do
+				if domain.inactive[i] == self then
+					return true
+				end
+			end
+		end
+	end
+
+	function base:addtodomain(domain)
+		domain = domain or physics.Domain.current
+		if domain then
+			domain:addentity(self)
+		end
+	end
+
+	function base:removefromdomain(domain)
+		domain = domain or physics.Domain.current
+		if domain then
+			domain:removeentity(self)
+		end
 	end
 
 	function base:move(dx, dy, solidpredicate)
@@ -204,16 +230,18 @@ physics.Entity = class() do
 			self.h or 0
 	end
 
-	function base:center()
-		return self.x + self.w / 2, self.y + self.h / 2, 0
+	function base:center(x, y)
+		if x and y then
+			self.x = x - (self.w / 2)
+			self.y = y - (self.h / 2)
+		else
+			return self.x + self.w / 2, self.y + self.h / 2, 0
+		end
 	end
 
 	function physics.Entity:getkey()
 		return function (i, j)
-			local obj = self()
-			obj.x = i - (obj.w / 2) + .5
-			obj.y = j - (obj.h / 2) + .5
-			return obj
+			return self():center(i + .5, j + .5)
 		end
 	end
 

@@ -6,8 +6,9 @@ require "Pool"
 
 render = {}
 
-render.mindist = 0
-render.maxdist = 8
+render.fogcolor = color.black
+render.fogstart = 0
+render.fogend = 8
 
 render.DrawCall = class() do
 
@@ -40,12 +41,20 @@ end
 --execute render calls
 function render.draw()
 	love.graphics.clear(color.black)
+	for i = 0, screen.height -1 do
+		if i < screen.height / 2 then
+			love.graphics.setColor(color.lerp(Level.current.ceilingcolor, render.fogcolor, i / (screen.height / 2)))
+		else
+			love.graphics.setColor(color.lerp(render.fogcolor, Level.current.floorcolor, (i - screen.height / 2) / (screen.height / 2)))
+		end
+		love.graphics.rectangle("fill", 0, i, screen.width, 1)
+	end
 	table.sort(render.calls, render.DrawCall.bydist)	--depth sort; further away objects are rendered first
 	for i = 1, #render.calls do
 		local call = render.calls[i]
 		if call.info.dist > 0 then
 			if not call.info.nofog then
-				love.graphics.setColor(color.lerp(color.white, color.black, (call.info.dist - render.mindist) / (render.maxdist - render.mindist)))
+				love.graphics.setColor(color.lerp(color.white, color.black, (call.info.dist - render.fogstart) / (render.fogend - render.fogstart)))
 			else
 				love.graphics.setColor(color.white)
 			end

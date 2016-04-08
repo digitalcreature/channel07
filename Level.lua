@@ -1,7 +1,7 @@
 require "oop"
 require "physics"
 require "render"
-require "ui"
+require "hud"
 
 require "State"
 require "Vector"
@@ -18,7 +18,7 @@ Level = subclass(State) do
 
 	function base:update(dt)
 		self.domain:update(dt)
-		ui:update(dt)
+		hud:update(dt)
 	end
 
 	function base:draw()
@@ -27,16 +27,20 @@ Level = subclass(State) do
 		player:render()
 		for i = 1, #self.domain.entities do
 			local entity = self.domain.entities[i]
-			if not self.domain.inactive[entity] and entity.render then
+			if not entity:isinactive() and entity.render then
 				entity:render()
 			end
 		end
 		render:draw()
-		ui:draw()
+		hud:draw()
 	end
 
-	function base:mousepressed()
-		player:takedamage()
+	function base:mousepressed(x, y, button)
+		return player:mousepressed(x, y, button)
+	end
+
+	function base:keypressed(key)
+		return player:keypressed(key)
 	end
 
 	function Level.setcurrent(level)

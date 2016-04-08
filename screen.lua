@@ -2,8 +2,8 @@ require "color"
 
 screen = {}
 
-screen.width = 64
-screen.height = 64
+screen.width = 256
+screen.height = 256
 screen.scale = 10	--default window scaling
 screen.ratio = 16 / 9
 

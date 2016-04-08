@@ -9,7 +9,7 @@ TV = subclass(physics.Entity) do
 	local base = TV
 
 	local tvs = {}
-	local neighborradius = 3
+	local neighborradius = 1
 	local avoidfactor = 3
 
 	base.framesprite = Billboard("sprite/tv-frame.png", 1, 2/3, 2/3, 1/3, 1/3)

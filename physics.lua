@@ -234,6 +234,7 @@ physics.Entity = class() do
 		if x and y then
 			self.x = x - (self.w / 2)
 			self.y = y - (self.h / 2)
+			return self
 		else
 			return self.x + self.w / 2, self.y + self.h / 2, 0
 		end

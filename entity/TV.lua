@@ -19,7 +19,7 @@ TV = subclass(physics.Entity) do
 
 	base.speed = 1
 
-	function base:init(x, y)
+	function base:init()
 		base.super.init(self, 0, 0, 1/4, 1/4)
 		table.insert(tvs, self)
 	end

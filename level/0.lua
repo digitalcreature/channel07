@@ -14,7 +14,7 @@ local key = {
 	[2] = wall,
 	[3] = wall_stripe,
 	[4] = wall_7,
-	-- [5] = TV:getkey(),
+	[5] = TV:getkey(),
 }
 
 local level = Level.load("level/0.png", key)

@@ -69,16 +69,18 @@ function player:update(dt)
 	camera.pos:set(x, y, self.dead and self.deathheight or self.headheight)
 end
 
+local temp1, temp2 = Vector(), Vector()
 local function raycasthitprocessor(startpos, dir, pos, dist, obj, hitindex, axis, sign, i, j, ...)
 	if hitindex == 0 then
-		BulletHit(pos:xy()):addtodomain()
+		temp1:set(pos):sub(temp2:set(dir):norm():scale(.15))
+		BulletHit(temp1:xy()):addtodomain()
 	end
 end
 
 local pos, dir = Vector(), Vector()
 function player:fireweapon()
 	local x, y = self:center()
-	physics.Domain.current:raycast(pos:set(self.x, self.y), dir:set(Vector.east()):rotate2d(self.dir), nil, raycasthitprocessor)
+	physics.Domain.current:raycast(pos:set(self:center()), dir:set(Vector.east()):rotate2d(self.dir), nil, raycasthitprocessor)
 end
 
 function player:mousepressed(x, y, button)

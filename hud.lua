@@ -9,6 +9,7 @@ hud.deathmessageflashrate = 1
 
 local heart = love.graphics.newImage("sprite/heart.png")
 local deadmessage = love.graphics.newImage("sprite/deadmessage.png")
+local crosshair = love.graphics.newImage("sprite/crosshair.png")
 
 function hud:update(dt)
 	if self.damageflasht > 0 then
@@ -28,6 +29,10 @@ function hud:draw()
 		local x = (screen.width / 2) - (deadmessage:getWidth() / 2)
 		local y = (screen.height / 2) - (deadmessage:getHeight() / 2)
 		love.graphics.draw(deadmessage, x, y)
+	else
+		local x = (screen.width / 2) - (crosshair:getWidth() / 2)
+		local y = (screen.height / 2) - (crosshair:getHeight() / 2)
+		love.graphics.draw(crosshair, x, y)
 	end
 end
 

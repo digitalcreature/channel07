@@ -44,13 +44,11 @@ function player:update(dt)
 		local ddir = 0
 		if love.keyboard.isDown("left") then ddir = ddir + self.lookspd * dt end
 		if love.keyboard.isDown("right") then ddir = ddir - self.lookspd * dt end
-		if love.window.hasFocus() then
-			local mousex = love.mouse.getX()
-			local center = love.window.getMode() / 2
-			ddir = ddir - (mousex - center) * self.sensitivity
-			love.mouse.setVisible(false)
-			screen.centercursor()
-		end
+		local mousex = love.mouse.getX()
+		local center = love.window.getMode() / 2
+		ddir = ddir - (mousex - center) * self.sensitivity
+		love.mouse.setVisible(false)
+		screen.centercursor()
 		self.dir = self.dir + ddir
 		camera:setangle(self.dir)
 		dpos:set(0, 0)
@@ -70,11 +68,33 @@ function player:update(dt)
 	camera.pos:set(x, y, self.dead and self.deathheight or self.headheight)
 end
 
-local a, b, c = util.calln(3, Vector)
+local line, epos = util.calln(2, Vector)
 local function raycasthitprocessor(startpos, dir, pos, dist, obj, hitindex, axis, sign, i, j, ...)
 	if hitindex == 0 then
+		local nearest, nearestdist2
 		for i = 1, #Enemy.all do
 			local enemy = Enemy.all[i]
+			local dist
+			line:set(pos:xy(0)):sub(startpos:xy(0))
+			epos:set(enemy:center()):sub(startpos:xy(0))
+			local len2 = line:len2()
+			if len2 == 0 then
+				dist = epos:len()
+			else
+				local t = math.clamp(epos:dot(line) / len2)
+				local proj = line:scale(t)
+				dist = proj:dist(epos)
+			end
+			if dist <= enemy.damageradius then
+				local disttoplayer2 = epos:set(enemy:center()):dist2(player:center())
+				if not nearestdist2 or disttoplayer2 < nearestdist2 then
+					nearestdist2 = disttoplayer2
+					nearest = enemy
+				end
+			end
+		end
+		if nearest then
+			nearest:takedamage()
 		end
 	end
 end
@@ -98,6 +118,12 @@ function player:keypressed(key)
 	if key == "space" then
 		self:fireweapon()
 		return true
+	end
+end
+
+function player:takedamage(damage)
+	if self.class.takedamage(self, damage) then
+		hud:damageflash()
 	end
 end
 

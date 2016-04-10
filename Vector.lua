@@ -33,8 +33,8 @@ Vector = class() do
 		return self
 	end
 
-	function base:xy()
-		return self.x, self.y
+	function base:xy(z)
+		return self.x, self.y, z
 	end
 
 	function base:xyz()

@@ -10,14 +10,16 @@ TV = subclass(Enemy) do
 
 	local base = TV
 
-	local neighborradius = 1
-	local avoidfactor = 3
+	base.neighborradius = 1
+	base.avoidfactor = 3
+	base.damageradius = 1/4
 
 	TV.all = data.List()
 
-	base.framesprite = Billboard("sprite/tv-frame.png", 1, 2/3, 2/3, 1/3, 1/3)
-	base.staticsprite = Billboard("sprite/tv-static.png", 8, 2/3, 2/3, 1/3, 1/3, {nofog = true})
-	base.smilesprite = Billboard("sprite/tv-smile.png", 8, 2/3, 2/3, 1/3, 1/3, {nofog = true})
+	local h = 1
+	base.framesprite = Billboard("sprite/tv-frame.png", 1, 2/3, h, 1/3, h)
+	base.staticsprite = Billboard("sprite/tv-static.png", 8, 2/3, h, 1/3, h, {nofog = true})
+	base.smilesprite = Billboard("sprite/tv-smile.png", 8, 2/3, h, 1/3, h, {nofog = true})
 
 	base.speed = 1
 
@@ -34,9 +36,9 @@ TV = subclass(Enemy) do
 			local tv = TV.all[i]
 			if not tv.dead then
 				local dist = temp:set(self:center()):sub(tv:center()):len()
-				if dist < neighborradius then
+				if dist < self.neighborradius then
 					neighborcount = neighborcount + 1
-					temp:scale(avoidfactor * (1 - (dist / neighborradius)))
+					temp:scale(self.avoidfactor * (1 - (dist / self.neighborradius)))
 					avoid:add(temp)
 				end
 			end
@@ -48,7 +50,7 @@ TV = subclass(Enemy) do
 
 	function base:render()
 		local x, y = self:center()
-		local z = .6
+		local z = 0
 		self.framesprite:render(x, y, z)
 		local dist = camera:getscreenpoint(x, y, 0)
 		if dist < 1 then

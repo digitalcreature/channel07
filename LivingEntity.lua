@@ -21,11 +21,11 @@ LivingEntity = subclass(physics.Entity) do
 			local time = love.timer.getTime()
 			if time - self.lastdamagetime >= self.damagecooldown then
 				self.lastdamagetime = time;
-				hud:damageflash()
 				self.health = self.health - damage
 				if self.health <= 0 then
 					self:die()
 				end
+				return true
 			end
 		end
 	end

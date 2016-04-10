@@ -3,11 +3,15 @@ require "color"
 require "physics"
 require "camera"
 require "screen"
+require "util"
 
 require "Billboard"
 require "Vector"
+require "LivingEntity"
 
-player = physics.Entity(0, 0, 1/3, 1/3)
+player = LivingEntity(1/3, 1/3)
+player.health = 5
+player.damagecooldown = 3/4
 
 --facing direction
 player.dir = 0
@@ -21,9 +25,6 @@ player.sensitivity = .003
 
 player.headheight = 0.6
 player.deathheight = 0.15
-
-player.health = 5
-player.damagecooldown = 3/4
 
 function player:load()
 	screen.centercursor()
@@ -69,11 +70,12 @@ function player:update(dt)
 	camera.pos:set(x, y, self.dead and self.deathheight or self.headheight)
 end
 
-local temp1, temp2 = Vector(), Vector()
+local a, b, c = util.calln(3, Vector)
 local function raycasthitprocessor(startpos, dir, pos, dist, obj, hitindex, axis, sign, i, j, ...)
 	if hitindex == 0 then
-		temp1:set(pos):sub(temp2:set(dir):norm():scale(.15))
-		BulletHit(temp1:xy()):addtodomain()
+		for i = 1, #Enemy.all do
+			local enemy = Enemy.all[i]
+		end
 	end
 end
 
@@ -87,6 +89,8 @@ function player:mousepressed(x, y, button)
 	if button == 1 then
 		self:fireweapon()
 		return true
+	else
+		self:takedamage()
 	end
 end
 
@@ -95,25 +99,6 @@ function player:keypressed(key)
 		self:fireweapon()
 		return true
 	end
-end
-
-local lastdamagetime = 0
-function player:takedamage()
-	if not self.dead then
-		local time = love.timer.getTime()
-		if time - lastdamagetime >= self.damagecooldown then
-			lastdamagetime = time;
-			hud:damageflash()
-			self.health = self.health - 1
-			if self.health <= 0 then
-				self:die()
-			end
-		end
-	end
-end
-
-function player:die()
-	self.dead = true
 end
 
 function player:render()

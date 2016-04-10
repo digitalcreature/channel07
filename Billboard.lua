@@ -9,7 +9,7 @@ Billboard = class() do
 
 	local base = Billboard
 
-	function base:init(image, frames, width, height, originx, originy)
+	function base:init(image, frames, width, height, originx, originy, flags)
 		width = width or 1
 		height = height or 1
 		self.width = width
@@ -26,6 +26,7 @@ Billboard = class() do
 		end
 		self.nonsolid = true		--dont collide with entities
 		self.invisible = true	--dont hit with camera raycast
+		self.nofog = flags and flags.nofog
 	end
 
 	function base:render(x, y, z, animfps)

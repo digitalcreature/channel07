@@ -29,5 +29,3 @@ Pool = class() do
 	end
 
 end
-
-tablepool = Pool()

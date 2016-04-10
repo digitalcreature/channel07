@@ -1,0 +1,38 @@
+require "oop"
+require "physics"
+
+LivingEntity = subclass(physics.Entity) do
+
+	local base = LivingEntity
+
+	base.lastdamagetime = 0
+
+	base.health = 1
+	base.damagecooldown = 1
+	base.damageradius = 1/2 --hitbox radius
+
+	function base:init(w, h)
+		base.super.init(self, w, h)
+	end
+
+	function base:takedamage(damage)
+		damage = damage or 1
+		if not self.dead then
+			local time = love.timer.getTime()
+			if time - self.lastdamagetime >= self.damagecooldown then
+				self.lastdamagetime = time;
+				hud:damageflash()
+				self.health = self.health - damage
+				if self.health <= 0 then
+					self:die()
+				end
+			end
+		end
+	end
+
+	function base:die()
+		self.dead = true
+	end
+
+
+end

@@ -1,6 +1,7 @@
 require "oop"
 require "Vector"
 require "math2"
+require "data"
 
 physics = {}
 
@@ -14,8 +15,8 @@ physics.Domain = class() do
 		for i = 0, width - 1 do
 			self[i] = {}
 		end
-		self.entities = {}
-		self.inactive = {}
+		self.entities = data:List()
+		self.inactive = data:List()
 	end
 
 	function physics.Domain.setcurrent(domain)
@@ -30,11 +31,11 @@ physics.Domain = class() do
 	end
 
 	function base:addentity(entity)
-		table.insert(self.entities, entity)
+		self.entities:add(entity)
 	end
 
 	function base:removeentity(entity)
-		table.insert(self.inactive, entity)
+		self.inactive:add(entity)
 	end
 
 	function base:update(dt)
@@ -44,11 +45,7 @@ physics.Domain = class() do
 		end
 		for i = 1, #self.inactive do
 			local entity = self.inactive[i]
-			for i = 1, #self.entities do
-				if self.entities[i] == entity then
-					table.remove(self.entities, i)
-				end
-			end
+			self.entities:remove(entity)
 			self.inactive[i] = nil
 		end
 	end
@@ -137,22 +134,16 @@ physics.Entity = class() do
 
 	local base = physics.Entity
 
-	function base:init(x, y, w, h)
-		self.x = x or 0
-		self.y = y or 0
+	function base:init(w, h)
+		self.x = 0
+		self.y = 0
 		self.w = w or 0
 		self.h = h or 0
 	end
 
 	function base:isinactive(domain)
 		domain = domain or physics.Domain.current
-		if domain then
-			for i = 1, #domain.inactive do
-				if domain.inactive[i] == self then
-					return true
-				end
-			end
-		end
+		return domain and domain.inactive:contains(self)
 	end
 
 	function base:addtodomain(domain)

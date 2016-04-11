@@ -12,7 +12,7 @@ require "Billboard"
 
 function love.load(arg)
 	screen.load()
-	Level.setcurrent(require "level.0")
+	State.setcurrent(require "level.0"())
 	player:load()
 end
 

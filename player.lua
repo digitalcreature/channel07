@@ -28,7 +28,7 @@ player.headheight = 0.6
 player.deathheight = 0.15
 
 player.gun = {}
-player.gun.magsize = 7
+player.gun.magsize = 6
 player.gun.cooldown = 1/2
 player.gun.reloadtime = 3/2
 player.gun.reloadt = nil
@@ -81,6 +81,12 @@ function player:update(dt)
 				self.gun.reloadt = nil
 				self.gun.mag = self.gun.magsize
 			end
+		end
+		local tile = physics.Domain.current:get(self:ijcenter())
+		if type(tile) == "string" then
+			hud.message = tile
+		else
+			hud.message = nil
 		end
 	else
 		local ddir = dt * .5
@@ -159,8 +165,11 @@ end
 
 function player:keypressed(key)
 	if key == "space" then
-		self:fireweapon()
+		self.gun:fire()
 		return true
+	end
+	if key == "r" then
+		self.gun:reload()
 	end
 end
 

@@ -16,6 +16,11 @@ Level = subclass(State) do
 		self.domain = physics.Domain(width, height)
 	end
 
+	function base:onenter()
+		Level.current = self
+		physics.Domain.setcurrent(self.domain)
+	end
+
 	function base:update(dt)
 		self.domain:update(dt)
 		hud:update(dt)
@@ -43,12 +48,6 @@ Level = subclass(State) do
 		return player:keypressed(key)
 	end
 
-	function Level.setcurrent(level)
-		Level.current = level
-		State.setcurrent(level)
-		physics.Domain.setcurrent(level.domain)
-	end
-
 	function Level.load(map, key)
 		if type(map) == "string" then
 			map = love.image.newImageData(map)
@@ -56,7 +55,7 @@ Level = subclass(State) do
 		local w, h = map:getDimensions()
 		local level = Level(w, h)
 		local pallete = {}
-		for i, obj in ipairs(key) do
+		for i, obj in pairs(key) do
 			local pixel = {map:getPixel(i - 1, 0)}
 			pallete[pixel] = obj
 		end
@@ -83,6 +82,7 @@ Level = subclass(State) do
 						level.domain:addentity(obj)
 					end
 				else
+					print(obj)
 					level.domain:set(x, y, obj)
 				end
 			end

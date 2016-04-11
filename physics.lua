@@ -234,6 +234,11 @@ physics.Entity = class() do
 		end
 	end
 
+	function base:ijcenter()
+		local x, y = self:center()
+		return math.floor(x), math.floor(y)
+	end
+
 	function physics.Entity:getkey()
 		return function (i, j)
 			return self():center(i + .5, j + .5)
@@ -246,7 +251,5 @@ function physics.solidpredicate(obj, x, y)
 	if obj == nil then return false end
 	if type(obj) == "table" then
 		return not obj.nonsolid
-	else
-		return true
 	end
 end

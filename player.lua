@@ -97,11 +97,13 @@ local function raycasthitprocessor(startpos, dir, pos, dist, obj, hitindex, axis
 			end
 		end
 		if nearest then
-			nearest:takedamage()
+			nearest:takedamage(1)
+			epos:set(nearest:center())
 		else
-			local explosion = ParticleExplosion(wallhitsprite, 50, 1/2, 1, 1/10, 1/2, -20):addtodomain():center(pos:xy())
-			explosion.z = player.headheight
+			epos:set(pos)
 		end
+		local explosion = ParticleExplosion(wallhitsprite, 50, 1/2, 1, 1/10, 1/2, 1, 3):addtodomain():center(epos:xy())
+		explosion.z = player.headheight
 	end
 end
 

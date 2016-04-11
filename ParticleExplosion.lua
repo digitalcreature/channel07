@@ -7,23 +7,26 @@ require "Billboard"
 ParticleExplosion = class(physics.Entity) do
 
 	local base = ParticleExplosion
+	base.speed = 1
 
-	function base:init(billboard, count, velmin, velmax, lifetimemin, lifetimemax, gravity)
+	function base:init(billboard, count, velmin, velmax, lifetimemin, lifetimemax, initalzvelmin, initalzvelmax, gravity)
 		base.super.init(self, 0, 0, 1, 1)
 		self.billboard = billboard
 		self.particles = {}
+		self.gravity = gravity or -20
 		for i = 1, count do
 			particle = Vector()
 			particle.lifetime = math.random(lifetimemin, lifetimemax)
 			particle.vel = Vector(Vector.random()):norm():scale(math.random(velmin, velmax))
+			particle.vel.z = math.random(initalzvelmin, initalzvelmax)
 			self.particles[i] = particle
 		end
 		self.lifetime = lifetimemax
-		self.gravity = gravity or -10
 	end
 
 	local dvel, dpos = Vector(), Vector()
 	function base:update(dt)
+		dt = dt * self.speed
 		self.lifetime = self.lifetime - dt
 		if self.lifetime <= 0 then
 			self:removefromdomain()
@@ -49,6 +52,7 @@ ParticleExplosion = class(physics.Entity) do
 			local particle = self.particles[i]
 			if not particle.dead then
 				pos:set(self:center()):add(particle)
+				pos.z = math.clamp(pos.z, -1, 3)
 				self.billboard:render(pos:xyz())
 			end
 		end

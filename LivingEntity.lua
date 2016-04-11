@@ -8,7 +8,6 @@ LivingEntity = subclass(physics.Entity) do
 	base.lastdamagetime = 0
 
 	base.health = 1
-	base.damagecooldown = 1
 	base.damageradius = 1/2 --hitbox radius
 
 	function base:init(w, h)
@@ -19,7 +18,7 @@ LivingEntity = subclass(physics.Entity) do
 		damage = damage or 1
 		if not self.dead then
 			local time = love.timer.getTime()
-			if time - self.lastdamagetime >= self.damagecooldown then
+			if not self.damagecooldown or time - self.lastdamagetime >= self.damagecooldown then
 				self.lastdamagetime = time;
 				self.health = self.health - damage
 				if self.health <= 0 then

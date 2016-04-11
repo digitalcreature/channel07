@@ -6,6 +6,7 @@ require "util"
 
 require "entity.Enemy"
 require "Vector"
+require "ParticleExplosion"
 
 TV = subclass(Enemy) do
 
@@ -27,6 +28,7 @@ TV = subclass(Enemy) do
 	base.screensprite = base.staticsprite
 
 	base.speed = 1
+	base.health = 1
 
 	function base:init()
 		base.super.init(self, 1/4, 1/4)
@@ -69,9 +71,14 @@ TV = subclass(Enemy) do
 		self.screensprite:render(x, y, z)
 	end
 
+	local deathparticle = Billboard("sprite/statichit.png", 16, 1/3, 1/3, nil, nil, {nofog = true})
+
 	function base:die()
 		base.super.die(self)
 		TV.all:remove(self)
+		local effect = ParticleExplosion(deathparticle, 25, 1/2, 1, 1, 3, 1, 3, -5):center(self:center()):addtodomain()
+		effect.z = player.headheight
+		effect.speed = 2
 	end
 
 end

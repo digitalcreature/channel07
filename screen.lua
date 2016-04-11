@@ -47,6 +47,8 @@ function love.draw()
 	love.graphics.draw(screen.canvas, 0, 0, 0, w / screen.width, h / screen.height)
 	if screen.showfps then
 		love.graphics.setColor(color.white)
+		love.graphics.setFont(font.default)
+		
 		love.graphics.print((math.floor(1 / love.timer.getDelta())).."FPS\n"..(love.timer.getFPS().."FPS"), 0, 0)
 	end
 end

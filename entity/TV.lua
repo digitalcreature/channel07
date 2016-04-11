@@ -22,9 +22,9 @@ TV = subclass(Enemy) do
 	TV.all = data.List()
 
 	local h = 1
-	base.framesprite = Billboard("sprite/tv-frame.png", 1, 2/3, h, 1/3, h)
-	base.staticsprite = Billboard("sprite/tv-static.png", 8, 2/3, h, 1/3, h, {nofog = true})
-	base.smilesprite = Billboard("sprite/tv-smile.png", 8, 2/3, h, 1/3, h, {nofog = true})
+	base.framesprite = Billboard("sprite/tv-frame.png", 1, 2/3, 2/3, 1/3, 1/3)
+	base.staticsprite = Billboard("sprite/tv-static.png", 8, 2/3, 2/3, 1/3, 1/3, {nofog = true})
+	base.smilesprite = Billboard("sprite/tv-smile.png", 8, 2/3, 2/3, 1/3, 1/3, {nofog = true})
 	base.screensprite = base.staticsprite
 
 	base.speed = 1
@@ -33,6 +33,7 @@ TV = subclass(Enemy) do
 	function base:init()
 		base.super.init(self, 1/4, 1/4)
 		TV.all:add(self)
+		self.z = 0.6
 	end
 
 	local avoid, dpos, temp = util.calln(3, Vector)
@@ -65,10 +66,8 @@ TV = subclass(Enemy) do
 	end
 
 	function base:render()
-		local x, y = self:center()
-		local z = 0
-		self.framesprite:render(x, y, z)
-		self.screensprite:render(x, y, z)
+		self.framesprite:render(self:center())
+		self.screensprite:render(self:center())
 	end
 
 	local deathparticle = Billboard("sprite/statichit.png", 16, 1/3, 1/3, nil, nil, {nofog = true})
@@ -77,7 +76,6 @@ TV = subclass(Enemy) do
 		base.super.die(self)
 		TV.all:remove(self)
 		local effect = ParticleExplosion(deathparticle, 25, 1/2, 1, 1, 3, 1, 3, -5):center(self:center()):addtodomain()
-		effect.z = player.headheight
 		effect.speed = 2
 	end
 

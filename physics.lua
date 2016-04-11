@@ -223,10 +223,11 @@ physics.Entity = class() do
 			self.h or 0
 	end
 
-	function base:center(x, y)
+	function base:center(x, y, z)
 		if x and y then
 			self.x = x - (self.w / 2)
 			self.y = y - (self.h / 2)
+			self.z = z or self.z
 			return self
 		else
 			return self.x + self.w / 2, self.y + self.h / 2, self.z or 0

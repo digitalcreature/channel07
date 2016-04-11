@@ -63,7 +63,7 @@ function player:update(dt)
 		if love.keyboard.isDown("a") then dpos.x = dpos.x - self.spdx end
 		if love.keyboard.isDown("d") then dpos.x = dpos.x + self.spdx end
 		viewbobt = viewbobt + (dpos:len() * dt)
-		viewbob = math.cos(viewbobt * viewbobfreq) * viewbobamp
+		viewbob = math.sin(viewbobt * viewbobfreq) * viewbobamp
 		dpos:rotate2d(self.dir - (math.pi / 2))
 		dpos:scale(dt)
 		self:move(dpos:xy())
@@ -86,7 +86,8 @@ local function raycasthitprocessor(startpos, dir, pos, dist, obj, hitindex, axis
 			local enemy = Enemy.all[i]
 			local dist
 			line:set(pos:xy(0)):sub(startpos:xy(0))
-			epos:set(enemy:center()):sub(startpos:xy(0))
+			local x, y = enemy:center()
+			epos:set(x, y, 0):sub(startpos:xy(0))
 			local len2 = line:len2()
 			if len2 == 0 then
 				dist = epos:len()

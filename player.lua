@@ -8,6 +8,7 @@ require "util"
 require "Billboard"
 require "Vector"
 require "LivingEntity"
+require "ParticleExplosion"
 
 player = LivingEntity(1/3, 1/3)
 player.health = 5
@@ -68,6 +69,8 @@ function player:update(dt)
 	camera.pos:set(x, y, self.dead and self.deathheight or self.headheight)
 end
 
+local wallhitsprite = Billboard("sprite/wallhit.png", 1, 1/5, 1/5)
+
 local line, epos = util.calln(2, Vector)
 local function raycasthitprocessor(startpos, dir, pos, dist, obj, hitindex, axis, sign, i, j, ...)
 	if hitindex == 0 then
@@ -95,6 +98,9 @@ local function raycasthitprocessor(startpos, dir, pos, dist, obj, hitindex, axis
 		end
 		if nearest then
 			nearest:takedamage()
+		else
+			local explosion = ParticleExplosion(wallhitsprite, 50, 1/2, 1, 1/10, 1/2, -20):addtodomain():center(pos:xy())
+			explosion.z = player.headheight
 		end
 	end
 end
@@ -107,8 +113,10 @@ end
 
 function player:mousepressed(x, y, button)
 	if button == 1 then
-		self:fireweapon()
-		return true
+		if not self.dead then
+			self:fireweapon()
+			return true
+		end
 	else
 		self:takedamage()
 	end
@@ -128,30 +136,4 @@ function player:takedamage(damage)
 end
 
 function player:render()
-end
-
-BulletHit = subclass(physics.Entity) do
-
-	local base = BulletHit
-
-	local sprite = Billboard("sprite/hit.png", 1, 1/2, 1/2)
-
-	function base:init(x, y)
-		base.super.init(self, 0, 0, .1, .1)
-		self:center(x, y)
-		self.cooldown = 3
-	end
-
-	function base:update(dt)
-		self.cooldown = self.cooldown - dt
-		if self.cooldown <= 0 then
-			self:removefromdomain()
-		end
-	end
-
-	function base:render()
-		local x, y = self:center()
-		sprite:render(x, y, player.headheight)
-	end
-
 end

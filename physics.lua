@@ -151,6 +151,7 @@ physics.Entity = class() do
 		if domain then
 			domain:addentity(self)
 		end
+		return self
 	end
 
 	function base:removefromdomain(domain)
@@ -158,6 +159,7 @@ physics.Entity = class() do
 		if domain then
 			domain:removeentity(self)
 		end
+		return self
 	end
 
 	function base:move(dx, dy, solidpredicate)
@@ -227,7 +229,7 @@ physics.Entity = class() do
 			self.y = y - (self.h / 2)
 			return self
 		else
-			return self.x + self.w / 2, self.y + self.h / 2, 0
+			return self.x + self.w / 2, self.y + self.h / 2, self.z or 0
 		end
 	end
 

@@ -1,4 +1,5 @@
 require "oop"
+require "util"
 
 Vector = class() do
 
@@ -12,6 +13,10 @@ Vector = class() do
 	function Vector.west() return -1, 0, 0 end
 	function Vector.up() return 0, 0, 1 end
 	function Vector.down() return 0, 0, -1 end
+
+	function Vector.random()
+		return util.calln(3, math.random, -1, 1)
+	end
 
 	local function args(x, y, z)
 		if type(x) == "table" then

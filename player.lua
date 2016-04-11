@@ -27,8 +27,16 @@ player.sensitivity = .003
 player.headheight = 0.6
 player.deathheight = 0.15
 
+player.gun = {}
+player.gun.magsize = 7
+player.gun.cooldown = 1/2
+player.gun.reloadtime = 3/2
+player.gun.reloadt = nil
+
 function player:load()
 	screen.centercursor()
+	self.gun.mag = self.gun.magsize
+	self.gun.lastfiretime = 0
 end
 
 function player:getkey(angle)
@@ -67,6 +75,13 @@ function player:update(dt)
 		dpos:rotate2d(self.dir - (math.pi / 2))
 		dpos:scale(dt)
 		self:move(dpos:xy())
+		if self.gun.reloadt then
+			self.gun.reloadt = self.gun.reloadt + dt
+			if self.gun.reloadt >= self.gun.reloadtime then
+				self.gun.reloadt = nil
+				self.gun.mag = self.gun.magsize
+			end
+		end
 	else
 		local ddir = dt * .5
 		self.dir = self.dir + ddir
@@ -116,19 +131,29 @@ local function raycasthitprocessor(startpos, dir, pos, dist, obj, hitindex, axis
 end
 
 local pos, dir = Vector(), Vector()
-function player:fireweapon()
-	local x, y = self:center()
-	physics.Domain.current:raycast(pos:set(self:center()), dir:set(Vector.east()):rotate2d(self.dir), nil, raycasthitprocessor)
+function player.gun:fire()
+	local time = love.timer.getTime()
+	if time - self.lastfiretime >= self.cooldown and self.mag > 0 and not self.reloadt then
+		self.lastfiretime = time
+		self.mag = self.mag - 1
+		physics.Domain.current:raycast(pos:set(player:center()), dir:set(Vector.east()):rotate2d(player.dir), nil, raycasthitprocessor)
+	end
+end
+
+function player.gun:reload()
+	if self.mag < self.magsize then
+		self.reloadt = 0
+	end
 end
 
 function player:mousepressed(x, y, button)
 	if button == 1 then
 		if not self.dead then
-			self:fireweapon()
+			self.gun:fire()
 			return true
 		end
 	else
-		self:takedamage()
+		self.gun:reload()
 	end
 end
 

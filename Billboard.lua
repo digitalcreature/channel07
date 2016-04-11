@@ -42,23 +42,20 @@ Billboard = class() do
 	end
 
 	function base:draw(info)
-		love.graphics.push()
-			love.graphics.translate(info.scanx, screen.height / 2)
-			love.graphics.scale((screen.height / info.dist) * self.width, (screen.height / info.dist) * self.height)
-			local x = -self.originx
-			local y = camera.pos.z - info.z - self.originy
-			love.graphics.translate(x, y)
-			local framei = ((love.timer.getTime() - info.animstarttime) * self.animfps)
-			if self.animmode == "loop" then
-				framei = framei % #self.quads
-			elseif self.animmode == "clamp" then
-				framei = math.clamp(framei, #self.quads - 1)
-			else
-				error("invalid animmode \""..self.animmode.."\"")
-			end
-			local frame = math.floor(framei) + 1
-			love.graphics.draw(self.image, self.quads[frame], 0, 0)
-		love.graphics.pop()
+		love.graphics.scale(self.width, self.height)
+		local x = -self.originx
+		local y = camera.pos.z - info.z - self.originy
+		love.graphics.translate(x, y)
+		local framei = ((love.timer.getTime() - info.animstarttime) * self.animfps)
+		if self.animmode == "loop" then
+			framei = framei % #self.quads
+		elseif self.animmode == "clamp" then
+			framei = math.clamp(framei, #self.quads - 1)
+		else
+			error("invalid animmode \""..self.animmode.."\"")
+		end
+		local frame = math.floor(framei) + 1
+		love.graphics.draw(self.image, self.quads[frame], 0, 0)
 	end
 
 end

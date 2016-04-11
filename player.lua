@@ -39,8 +39,13 @@ function player:getkey(angle)
 	end
 end
 
+local viewbobamp = 1/12
+local viewbobfreq = 3
+local viewbobt = 0
+
 local dpos = Vector()
 function player:update(dt)
+	local viewbob
 	if not self.dead then
 		local ddir = 0
 		if love.keyboard.isDown("left") then ddir = ddir + self.lookspd * dt end
@@ -57,6 +62,8 @@ function player:update(dt)
 		if love.keyboard.isDown("s", "down") then dpos.y = dpos.y + self.spdy end
 		if love.keyboard.isDown("a") then dpos.x = dpos.x - self.spdx end
 		if love.keyboard.isDown("d") then dpos.x = dpos.x + self.spdx end
+		viewbobt = viewbobt + (dpos:len() * dt)
+		viewbob = math.cos(viewbobt * viewbobfreq) * viewbobamp
 		dpos:rotate2d(self.dir - (math.pi / 2))
 		dpos:scale(dt)
 		self:move(dpos:xy())
@@ -66,7 +73,7 @@ function player:update(dt)
 		camera:setangle(self.dir)
 	end
 	local x, y = self:center()
-	camera.pos:set(x, y, self.dead and self.deathheight or self.headheight)
+	camera.pos:set(x, y, self.dead and self.deathheight or (self.headheight + viewbob))
 end
 
 local wallhitsprite = Billboard("sprite/wallhit.png", 1, 1/5, 1/5)

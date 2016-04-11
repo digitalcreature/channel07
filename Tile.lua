@@ -9,12 +9,9 @@ Tile = class() do
 	function base:init() end
 
 	function base:draw(info)
-		love.graphics.push()
-			love.graphics.translate(info.scanx, screen.height / 2)
-			love.graphics.scale(1, screen.height / info.dist)
-			love.graphics.translate(0, - 1 - info.z + camera.pos.z)
-			self:shader(info)
-		love.graphics.pop()
+		love.graphics.scale(info.dist / screen.height, 1)
+		love.graphics.translate(0, - 1 - info.z + camera.pos.z)
+		self:shader(info)
 	end
 
 	function base:shader(info)

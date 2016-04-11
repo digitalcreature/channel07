@@ -58,7 +58,11 @@ function render.draw()
 			else
 				love.graphics.setColor(color.white)
 			end
-			call()
+			love.graphics.push()
+				love.graphics.translate(call.info.scanx, screen.height / 2)
+				love.graphics.scale((screen.height / call.info.dist), (screen.height / call.info.dist))
+				call()
+			love.graphics.pop()
 		end
 		render.callpool:checkin(call)
 		render.calls[i] = nil

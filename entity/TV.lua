@@ -12,7 +12,7 @@ TV = subclass(Enemy) do
 
 	local base = TV
 
-	base.neighborradius = 3
+	base.neighborradius = 1
 	base.avoidfactor = 3
 	base.damageradius = 1/4
 
@@ -74,12 +74,12 @@ TV = subclass(Enemy) do
 		self.screensprite:render(self:center())
 	end
 
-	local deathparticle = Billboard("sprite/statichit.png", 16, 1/3, 1/3, nil, nil, {nofog = true})
+	local deathparticle = Billboard("sprite/statichit.png", 16, 1/4, 1/4, nil, nil, {nofog = true})
 
 	function base:die()
 		base.super.die(self)
 		TV.all:remove(self)
-		local effect = ParticleExplosion(deathparticle, 25, 1/2, 1, 1, 3, 1, 3, -5):center(self:center()):addtodomain()
+		local effect = ParticleExplosion(deathparticle, 40, 1/2, 1, 1, 3, 1, 3, -5):center(self:center()):addtodomain()
 		effect.speed = 2
 	end
 

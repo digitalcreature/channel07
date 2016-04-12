@@ -11,7 +11,6 @@ require "LivingEntity"
 require "ParticleExplosion"
 
 player = LivingEntity(1/3, 1/3)
-player.health = 5
 player.damagecooldown = 3/4
 
 --facing direction
@@ -32,17 +31,19 @@ player.gun.magsize = 6
 player.gun.cooldown = 1/2
 player.gun.reloadtime = 3/2
 player.gun.reloadt = nil
-
-function player:load()
-	screen.centercursor()
-	self.gun.mag = self.gun.magsize
-	self.gun.lastfiretime = 0
-end
+player.gun.range = 5
 
 function player:getkey(angle)
 	return function (x, y)
 		player:center(x + .5, y + .5)
 		player.dir = angle or 0
+		screen.centercursor()
+		player.gun.mag = player.gun.magsize
+		player.gun.lastfiretime = 0
+		player.health = 5
+		player["red key"] = nil
+		player["green key"] = nil
+		player["blue key"] = nil
 		return player
 	end
 end
@@ -117,7 +118,7 @@ local function raycasthitprocessor(startpos, dir, pos, dist, obj, hitindex, axis
 			end
 			if dist <= enemy.damageradius then
 				local disttoplayer2 = epos:set(enemy:center()):dist2(player:center())
-				if not nearestdist2 or disttoplayer2 < nearestdist2 then
+				if (not nearestdist2 or disttoplayer2 < nearestdist2) and (disttoplayer2 <= (player.gun.range * player.gun.range)) then
 					nearestdist2 = disttoplayer2
 					nearest = enemy
 				end
@@ -129,8 +130,10 @@ local function raycasthitprocessor(startpos, dir, pos, dist, obj, hitindex, axis
 		else
 			epos:set(pos)
 		end
-		local explosion = ParticleExplosion(wallhitsprite, 50, 1/2, 1, 1/10, 1/2, 1, 3):addtodomain():center(epos:xy())
-		explosion.z = player.headheight
+		if dist <= player.gun.range then
+			local explosion = ParticleExplosion(wallhitsprite, 50, 1/2, 1, 1/10, 1/2, 1, 3):addtodomain():center(epos:xy())
+			explosion.z = player.headheight
+		end
 	end
 end
 

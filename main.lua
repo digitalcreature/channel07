@@ -13,7 +13,6 @@ require "Billboard"
 function love.load(arg)
 	screen.load()
 	State.setcurrent(require "level.0"())
-	player:load()
 end
 
 function love.update(dt)
@@ -27,7 +26,11 @@ function screen.draw()
 end
 
 function love.keypressed(key)
-	return screen.keypressed(key) or pause.keypressed(key) or State.current:keypressed(key)
+	if key == "f5" then
+		State.setcurrent(require "level.0"())
+	else
+		return screen.keypressed(key) or pause.keypressed(key) or State.current:keypressed(key)
+	end
 end
 
 function love.keyreleased(key)

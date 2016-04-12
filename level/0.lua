@@ -6,6 +6,7 @@ require "Tile"
 require "Door"
 require "entity.TV"
 require "entity.Key"
+require "entity.Heart"
 
 local wall_red = TextureTile("level/wall-red.png")
 local wall_red_stripe = TextureTile("level/wall-red-stripe.png")
@@ -19,7 +20,7 @@ local wall_blue_07 = TextureTile("level/wall-blue-07.png")
 local door_wall = TextureTile("level/door-wall.png")
 
 local key = {
-	player:getkey(- math.pi / 2 + .1),
+	player:getkey(0.1),
 	wall_red,
 	wall_red_stripe,
 	wall_red_07,
@@ -29,6 +30,7 @@ local key = {
 	wall_blue,
 	wall_blue_stripe,
 	wall_blue_07,
+	Door:getkey(),
 	Door.Red:getkey(),
 	Door.Green:getkey(),
 	Door.Blue:getkey(),
@@ -37,6 +39,7 @@ local key = {
 	Key.Green:getkey(),
 	Key.Blue:getkey(),
 	TV:getkey(),
+	Heart:getkey(),
 }
 
 return function ()

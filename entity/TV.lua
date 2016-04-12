@@ -11,14 +11,14 @@ TV = subclass(Enemy) do
 
 	local base = TV
 
-	base.neighborradius = 1
+	base.neighborradius = 3
 	base.avoidfactor = 3
 	base.damageradius = 1/4
 
-	base.smileradius = 2
-	base.attackradius = 1.25
+	base.smileradius = 3/2
+	base.attackradius = 1
 
-	base.aggroradius = 10
+	base.aggroradius = render.fogend
 
 	local h = 1
 	base.framesprite = Billboard("sprite/tv-frame.png", 1, 2/3, 2/3, 1/3, 1/3)

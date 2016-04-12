@@ -18,6 +18,7 @@ Door = subclass(TextureTile) do
 	base.openwidth = 3/4
 
 	function base:init(key, xtex, ytex)
+		xtex = xtex or "level/door.png"
 		base.super.init(self, xtex, ytex)
 		self.key = key
 	end

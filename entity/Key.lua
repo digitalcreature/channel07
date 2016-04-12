@@ -1,31 +1,14 @@
 require "oop"
-require "physics"
-
 require "Billboard"
-require "Vector"
 
-Key = subclass(physics.Entity) do
+require "entity.Item"
+
+Key = subclass(Item) do
 
 	local base = Key
 
-	base.radius = 1/2
-
-	function base:init()
-		base.super.init(self, 1, 1)
-	end
-
-	local temp = Vector()
-	function base:update(dt)
-		if temp:set(self:center()):dist2(player:center()) <= (self.radius * self.radius) then
-			player[self.name] = true
-			self:removefromdomain()
-		end
-	end
-
-	function base:render()
-		local x, y = self:center()
-		local z = (math.sin(love.timer.getTime() * 8) + 1) / 16
-		self.billboard:render(x, y, z)
+	function base:ontaken()
+		player[self.name] = true
 	end
 
 end

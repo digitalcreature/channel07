@@ -3,9 +3,9 @@ require "camera"
 require "player"
 require "util"
 
-require "entity.Enemy"
 require "Vector"
-require "ParticleExplosion"
+require "entity.Enemy"
+require "entity.ParticleExplosion"
 
 TV = subclass(Enemy) do
 

@@ -7,11 +7,12 @@ require "util"
 
 require "Billboard"
 require "Vector"
-require "LivingEntity"
-require "ParticleExplosion"
+require "entity.LivingEntity"
+require "entity.ParticleExplosion"
 
 player = LivingEntity(1/3, 1/3)
 player.damagecooldown = 3/4
+
 
 --facing direction
 player.dir = 0
@@ -40,7 +41,8 @@ function player:getkey(angle)
 		player.gun.mag = player.gun.magsize
 		player.gun.reloadt = nil
 		player.gun.lastfiretime = 0
-		player.health = 5
+		player.maxhealth = 5
+		player.health = player.maxhealth
 		player.dead = false
 		player["red key"] = nil
 		player["green key"] = nil

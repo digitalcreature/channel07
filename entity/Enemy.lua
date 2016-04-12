@@ -1,6 +1,6 @@
 require "physics"
 
-require "LivingEntity"
+require "entity.LivingEntity"
 
 Enemy = subclass(LivingEntity) do
 

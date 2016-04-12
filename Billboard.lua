@@ -1,9 +1,6 @@
 require "oop"
 require "camera"
-require "screen"
 require "render"
-
-require "Pool"
 
 Billboard = class() do
 

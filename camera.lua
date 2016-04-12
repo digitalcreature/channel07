@@ -1,7 +1,6 @@
 require "physics"
 require "render"
 
-require "Pool"
 require "Vector"
 
 camera = {

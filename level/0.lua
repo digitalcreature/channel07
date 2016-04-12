@@ -3,9 +3,9 @@ require "player"
 
 require "Level"
 require "Tile"
-require "entity.TV"
 require "Door"
-require "Key"
+require "entity.TV"
+require "entity.Key"
 
 local wall_red = TextureTile("level/wall-red.png")
 local wall_red_stripe = TextureTile("level/wall-red-stripe.png")

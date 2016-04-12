@@ -1,7 +1,8 @@
 require "oop"
-require "Vector"
 require "math2"
 require "data"
+
+require "Vector"
 
 physics = {}
 

@@ -22,8 +22,8 @@ Level = subclass(State) do
 	end
 
 	function base:update(dt)
-		self.domain:update(dt)
 		hud:update(dt)
+		self.domain:update(dt)
 	end
 
 	function base:draw()
@@ -72,7 +72,7 @@ Level = subclass(State) do
 					end
 				end
 				if type(obj) == "function" then
-					obj = obj(x, y)
+					obj = obj(x, y, level)
 				end
 				if type(obj) == "table" then
 					if instanceof(obj, Tile) then
@@ -82,7 +82,6 @@ Level = subclass(State) do
 						level.domain:addentity(obj)
 					end
 				else
-					print(obj)
 					level.domain:set(x, y, obj)
 				end
 			end

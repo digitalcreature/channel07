@@ -33,6 +33,8 @@ player.gun.cooldown = 1/2
 player.gun.reloadtime = 3/2
 player.gun.reloadt = nil
 
+player["red key"] = true
+
 function player:load()
 	screen.centercursor()
 	self.gun.mag = self.gun.magsize
@@ -47,7 +49,7 @@ function player:getkey(angle)
 	end
 end
 
-local viewbobamp = 1/12
+local viewbobamp = 1/18
 local viewbobfreq = 3
 local viewbobt = 0
 
@@ -85,8 +87,6 @@ function player:update(dt)
 		local tile = physics.Domain.current:get(self:ijcenter())
 		if type(tile) == "string" then
 			hud.message = tile
-		else
-			hud.message = nil
 		end
 	else
 		local ddir = dt * .5

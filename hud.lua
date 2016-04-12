@@ -9,8 +9,6 @@ hud.damageflashcolor = color.red
 hud.noammoflashrate = 1
 hud.deathmessageflashrate = 1
 
-hud.message = "you must run for your fucking life oh my god"
-
 local heart = love.graphics.newImage("sprite/heart.png")
 local bullet = love.graphics.newImage("sprite/bullet.png")
 
@@ -29,6 +27,7 @@ function hud:update(dt)
 		self.damageflasht = self.damageflasht - dt / player.damagecooldown
 		self.damageflasht = math.clamp(self.damageflasht)
 	end
+	self.message = nil
 end
 
 function hud:draw()

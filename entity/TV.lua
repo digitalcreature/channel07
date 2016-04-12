@@ -1,7 +1,6 @@
 require "physics"
 require "camera"
 require "player"
-require "data"
 require "util"
 
 require "entity.Enemy"
@@ -21,8 +20,6 @@ TV = subclass(Enemy) do
 
 	base.aggroradius = 10
 
-	TV.all = data.List()
-
 	local h = 1
 	base.framesprite = Billboard("sprite/tv-frame.png", 1, 2/3, 2/3, 1/3, 1/3)
 	base.staticsprite = Billboard("sprite/tv-static.png", 8, 2/3, 2/3, 1/3, 1/3, {nofog = true})
@@ -34,7 +31,6 @@ TV = subclass(Enemy) do
 
 	function base:init()
 		base.super.init(self, 1/4, 1/4)
-		TV.all:add(self)
 		self.z = 0.6
 	end
 
@@ -42,9 +38,9 @@ TV = subclass(Enemy) do
 	function base:update(dt)
 		local neighborcount = 0
 		avoid:set(Vector:zero())
-		for i = 1, #TV.all do
-			local tv = TV.all[i]
-			if not tv.dead then
+		for i = 1, #physics.Domain.current.entities do
+			local tv = physics.Domain.current.entities[i]
+			if instanceof(tv, TV) and not tv.dead then
 				local dist = temp:set(self:center()):sub(tv:center()):len()
 				if dist < self.neighborradius then
 					neighborcount = neighborcount + 1
@@ -78,7 +74,6 @@ TV = subclass(Enemy) do
 
 	function base:die()
 		base.super.die(self)
-		TV.all:remove(self)
 		local effect = ParticleExplosion(deathparticle, 40, 1/2, 1, 1, 3, 1, 3, -5):center(self:center()):addtodomain()
 		effect.speed = 2
 	end

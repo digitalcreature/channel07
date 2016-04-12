@@ -30,7 +30,6 @@ player.gun = {}
 player.gun.magsize = 6
 player.gun.cooldown = 1/2
 player.gun.reloadtime = 3/2
-player.gun.reloadt = nil
 player.gun.range = 5
 
 function player:getkey(angle)
@@ -39,6 +38,7 @@ function player:getkey(angle)
 		player.dir = angle or 0
 		screen.centercursor()
 		player.gun.mag = player.gun.magsize
+		player.gun.reloadt = nil
 		player.gun.lastfiretime = 0
 		player.health = 5
 		player.dead = false
@@ -105,36 +105,38 @@ local line, epos = util.calln(2, Vector)
 local function raycasthitprocessor(startpos, dir, pos, dist, obj, hitindex, axis, sign, i, j, ...)
 	if hitindex == 0 then
 		local nearest, nearestdist2
-		for i = 1, #Enemy.all do
-			local enemy = Enemy.all[i]
-			local dist
-			line:set(pos:xy(0)):sub(startpos:xy(0))
-			local x, y = enemy:center()
-			epos:set(x, y, 0):sub(startpos:xy(0))
-			local len2 = line:len2()
-			if len2 == 0 then
-				dist = epos:len()
-			else
-				local t = math.clamp(epos:dot(line) / len2)
-				local proj = line:scale(t)
-				dist = proj:dist(epos)
-			end
-			if dist <= enemy.damageradius then
-				local disttoplayer2 = epos:set(enemy:center()):dist2(player:center())
-				if (not nearestdist2 or disttoplayer2 < nearestdist2) and (disttoplayer2 <= (player.gun.range * player.gun.range)) then
-					nearestdist2 = disttoplayer2
-					nearest = enemy
+		for i = 1, #physics.Domain.current.entities do
+			local enemy = physics.Domain.current.entities[i]
+			if instanceof(enemy, Enemy) then
+				local dist
+				line:set(pos:xy(0)):sub(startpos:xy(0))
+				local x, y = enemy:center()
+				epos:set(x, y, 0):sub(startpos:xy(0))
+				local len2 = line:len2()
+				if len2 == 0 then
+					dist = epos:len()
+				else
+					local t = math.clamp(epos:dot(line) / len2)
+					local proj = line:scale(t)
+					dist = proj:dist(epos)
+				end
+				if dist <= enemy.damageradius then
+					local disttoplayer2 = epos:set(enemy:center()):dist2(player:center())
+					if (not nearestdist2 or disttoplayer2 < nearestdist2) and (disttoplayer2 <= (player.gun.range * player.gun.range)) then
+						nearestdist2 = disttoplayer2
+						nearest = enemy
+					end
 				end
 			end
-		end
-		if nearest then
-			nearest:takedamage(1)
-			epos:set(nearest:center())
-		else
-			epos:set(pos)
+			if nearest then
+				nearest:takedamage(1)
+				epos:set(nearest:center())
+			else
+				epos:set(pos)
+			end
 		end
 		if dist <= player.gun.range then
-			local explosion = ParticleExplosion(wallhitsprite, 50, 1/2, 1, 1/10, 1/2, 1, 3):addtodomain():center(epos:xy())
+			local explosion = ParticleExplosion(wallhitsprite, 25, 1/2, 1, 1/10, 1/2, 1, 3):addtodomain():center(epos:xy())
 			explosion.z = player.headheight
 		end
 	end

@@ -9,16 +9,17 @@ ParticleExplosion = class(physics.Entity) do
 	local base = ParticleExplosion
 	base.speed = 1
 
-	function base:init(billboard, count, velmin, velmax, lifetimemin, lifetimemax, initalzvelmin, initalzvelmax, gravity)
+	function base:init(billboard, count, velmin, velmax, lifetimemin, lifetimemax, zvelmin, zvelmax, gravity)
 		base.super.init(self, 0, 0, 1, 1)
 		self.billboard = billboard
 		self.particles = {}
 		self.gravity = gravity or -20
 		for i = 1, count do
 			particle = Vector()
-			particle.lifetime = math.random(lifetimemin, lifetimemax)
-			particle.vel = Vector(Vector.random()):norm():scale(math.random(velmin, velmax))
-			particle.vel.z = math.random(initalzvelmin, initalzvelmax)
+			particle.lifetime = lifetimemin + (math.random() * (lifetimemax - lifetimemin))
+			local spd = velmin + (math.random() * (velmax - velmin))
+			particle.vel = Vector(Vector.random()):norm():scale(spd)
+			particle.vel.z = zvelmin + (math.random() * (zvelmax - zvelmin))
 			self.particles[i] = particle
 		end
 		self.lifetime = lifetimemax
@@ -33,14 +34,15 @@ ParticleExplosion = class(physics.Entity) do
 		else
 			for i = 1, #self.particles do
 				local particle = self.particles[i]
-				particle.lifetime = particle.lifetime - dt
-				if particle.lifetime <= 0 then
-					particle.dead = true
-				end
 				if not particle.dead then
-					particle.vel:add(0, 0, self.gravity * dt)
-					dpos:set(particle.vel):scale(dt)
-					particle:add(dpos)
+					particle.lifetime = particle.lifetime - dt
+					if particle.lifetime <= 0 then
+						particle.dead = true
+					else
+						particle.vel:add(0, 0, self.gravity * dt)
+						dpos:set(particle.vel):scale(dt)
+						particle:add(dpos)
+					end
 				end
 			end
 		end

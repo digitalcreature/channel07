@@ -13,11 +13,13 @@ TV = subclass(Enemy) do
 	local base = TV
 
 	base.neighborradius = 3
-	base.avoidfactor = 5
+	base.avoidfactor = 3
 	base.damageradius = 1/4
 
 	base.smileradius = 2
-	base.attackradius = 3/2
+	base.attackradius = 1.25
+
+	base.aggroradius = 10
 
 	TV.all = data.List()
 
@@ -52,8 +54,6 @@ TV = subclass(Enemy) do
 			end
 		end
 		avoid:scale(1 / neighborcount)
-		dpos:set(player:center()):sub(self:center()):norm():add(avoid):scale(self.speed * dt)
-		self:move(dpos:xy())
 		local dist2 = temp:set(self:center()):dist2(player:center())
 		if dist2 <= (self.smileradius * self.smileradius) then
 			self.screensprite = self.smilesprite
@@ -62,6 +62,10 @@ TV = subclass(Enemy) do
 			end
 		else
 			self.screensprite = self.staticsprite
+		end
+		if dist2 <= (self.aggroradius * self.aggroradius) then
+			dpos:set(player:center()):sub(self:center()):norm():add(avoid):scale(self.speed * dt)
+			self:move(dpos:xy())
 		end
 	end
 

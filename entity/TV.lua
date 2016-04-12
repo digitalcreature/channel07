@@ -36,30 +36,30 @@ TV = subclass(Enemy) do
 
 	local avoid, dpos, temp = util.calln(3, Vector)
 	function base:update(dt)
-		local neighborcount = 0
-		avoid:set(Vector:zero())
-		for i = 1, #physics.Domain.current.entities do
-			local tv = physics.Domain.current.entities[i]
-			if instanceof(tv, TV) and not tv.dead then
-				local dist = temp:set(self:center()):sub(tv:center()):len()
-				if dist < self.neighborradius then
-					neighborcount = neighborcount + 1
-					temp:scale(self.avoidfactor * (1 - (dist / self.neighborradius)))
-					avoid:add(temp)
+		local dist2 = temp:set(self:center()):dist2(player:center())
+		if dist2 <= (self.aggroradius * self.aggroradius) then
+			local neighborcount = 0
+			avoid:set(Vector:zero())
+			for i = 1, #physics.Domain.current.entities do
+				local tv = physics.Domain.current.entities[i]
+				if instanceof(tv, TV) and not tv.dead then
+					local dist = temp:set(self:center()):sub(tv:center()):len()
+					if dist < self.neighborradius then
+						neighborcount = neighborcount + 1
+						temp:scale(self.avoidfactor * (1 - (dist / self.neighborradius)))
+						avoid:add(temp)
+					end
 				end
 			end
-		end
-		avoid:scale(1 / neighborcount)
-		local dist2 = temp:set(self:center()):dist2(player:center())
-		if dist2 <= (self.smileradius * self.smileradius) then
-			self.screensprite = self.smilesprite
-			if dist2 <= (self.attackradius * self.attackradius) then
-				player:takedamage()
+			avoid:scale(1 / neighborcount)
+			if dist2 <= (self.smileradius * self.smileradius) then
+				self.screensprite = self.smilesprite
+				if dist2 <= (self.attackradius * self.attackradius) then
+					player:takedamage()
+				end
+			else
+				self.screensprite = self.staticsprite
 			end
-		else
-			self.screensprite = self.staticsprite
-		end
-		if dist2 <= (self.aggroradius * self.aggroradius) then
 			dpos:set(player:center()):sub(self:center()):norm():add(avoid):scale(self.speed * dt)
 			self:move(dpos:xy())
 		end

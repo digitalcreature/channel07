@@ -2,7 +2,10 @@ require "oop"
 require "physics"
 require "render"
 require "hud"
+require "data"
 
+require "entity.Enemy"
+require "entity.TV"
 require "State"
 require "Vector"
 require "Tile"
@@ -64,6 +67,8 @@ Level = subclass(State) do
 		end
 		local yoffset = math.floor(#key / w) + 1
 		h = h - yoffset
+		Enemy.all = data.List()
+		TV.all = data.List()
 		for x = 0, w - 1 do
 			for y = 0, h - 1 do
 				local pixel = {map:getPixel(x, y + yoffset)}

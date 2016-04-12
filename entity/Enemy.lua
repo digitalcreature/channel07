@@ -16,7 +16,6 @@ Enemy = subclass(LivingEntity) do
 
 	function base:die()
 		base.super.die(self)
-		self:removefromdomain()
 		Enemy.all:remove(self)
 	end
 

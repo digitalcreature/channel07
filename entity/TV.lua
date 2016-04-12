@@ -17,7 +17,7 @@ TV = subclass(Enemy) do
 	base.damageradius = 1/4
 
 	base.smileradius = 2
-	base.attackradius = 1
+	base.attackradius = 3/2
 
 	TV.all = data.List()
 

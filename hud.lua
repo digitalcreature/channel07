@@ -22,6 +22,10 @@ local gun_reload = love.graphics.newImage("sprite/gun-reload.png")
 local deadmessage = love.graphics.newImage("sprite/deadmessage.png")
 local crosshair = love.graphics.newImage("sprite/crosshair.png")
 
+local key_red = love.graphics.newImage("sprite/key-red.png")
+local key_green = love.graphics.newImage("sprite/key-green.png")
+local key_blue = love.graphics.newImage("sprite/key-blue.png")
+
 function hud:update(dt)
 	if self.damageflasht > 0 then
 		self.damageflasht = self.damageflasht - dt / player.damagecooldown
@@ -73,6 +77,19 @@ function hud:draw()
 		local x = (screen.width / 2) - (crosshair:getWidth() / 2)
 		local y = (screen.height / 2) - (crosshair:getHeight() / 2)
 		love.graphics.draw(crosshair, x, y)
+		x = screen.width
+		if player["blue key"] then
+			x = x - key_blue:getWidth()
+			love.graphics.draw(key_blue, x, 0)
+		end
+		if player["green key"] then
+			x = x - key_green:getWidth()
+			love.graphics.draw(key_green, x, 0)
+		end
+		if player["red key"] then
+			x = x - key_red:getWidth()
+			love.graphics.draw(key_red, x, 0)
+		end
 		if self.message then
 			love.graphics.setFont(font.cool)
 			love.graphics.printf(self.message, 0, 8, screen.width, "center")

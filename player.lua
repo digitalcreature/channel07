@@ -24,7 +24,7 @@ player.lookspd = 1.5
 --mouselook sensitivity
 player.sensitivity = .003
 
-player.headheight = 0.6
+player.headheight = 0.5
 player.deathheight = 0.15
 
 player.gun = {}
@@ -32,8 +32,6 @@ player.gun.magsize = 6
 player.gun.cooldown = 1/2
 player.gun.reloadtime = 3/2
 player.gun.reloadt = nil
-
-player["red key"] = true
 
 function player:load()
 	screen.centercursor()

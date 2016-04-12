@@ -5,31 +5,43 @@ require "Level"
 require "Tile"
 require "entity.TV"
 require "Door"
+require "Key"
 
-local wall = TextureTile("level/wall.png")
-local wall_stripe = TextureTile("level/wall_stripe.png")
-local wall_7 = TextureTile("level/wall_7.png")
+local wall_red = TextureTile("level/wall-red.png")
+local wall_red_stripe = TextureTile("level/wall-red-stripe.png")
+local wall_red_07 = TextureTile("level/wall-red-07.png")
+local wall_green = TextureTile("level/wall-green.png")
+local wall_green_stripe = TextureTile("level/wall-green-stripe.png")
+local wall_green_07 = TextureTile("level/wall-green-07.png")
+local wall_blue = TextureTile("level/wall-blue.png")
+local wall_blue_stripe = TextureTile("level/wall-blue-stripe.png")
+local wall_blue_07 = TextureTile("level/wall-blue-07.png")
 local door_wall = TextureTile("level/door-wall.png")
 
 local key = {
 	player:getkey(- math.pi / 2 + .1),
-	wall,
-	wall_stripe,
-	wall_7,
-	nil,-- TV:getkey(),
-	nil,
-	nil,
+	wall_red,
+	wall_red_stripe,
+	wall_red_07,
+	wall_green,
+	wall_green_stripe,
+	wall_green_07,
+	wall_blue,
+	wall_blue_stripe,
+	wall_blue_07,
 	Door.Red:getkey(),
 	Door.Green:getkey(),
 	Door.Blue:getkey(),
 	door_wall,
-	nil,
-	"hello!",
+	Key.Red:getkey(),
+	Key.Green:getkey(),
+	Key.Blue:getkey(),
+	TV:getkey(),
 }
 
 return function ()
 	local level = Level.load("level/0.png", key)
-	level.floorcolor = {48, 24, 24}
+	level.floorcolor = {32, 32, 32}
 	level.ceilingcolor = {32, 32, 32}
 	return level
 end

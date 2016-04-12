@@ -12,11 +12,11 @@ TV = subclass(Enemy) do
 
 	local base = TV
 
-	base.neighborradius = 1
-	base.avoidfactor = 3
+	base.neighborradius = 3
+	base.avoidfactor = 5
 	base.damageradius = 1/4
 
-	base.smileradius = 1
+	base.smileradius = 2
 	base.attackradius = 1
 
 	TV.all = data.List()

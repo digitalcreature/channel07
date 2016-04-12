@@ -15,6 +15,7 @@ Door = subclass(TextureTile) do
 	base.transparent = true
 	base.radius = 1.5
 	base.opentime = 1/2
+	base.openwidth = 3/4
 
 	function base:init(key, xtex, ytex)
 		base.super.init(self, xtex, ytex)
@@ -26,7 +27,7 @@ Door = subclass(TextureTile) do
 		self.opent = self.opent + self.openrate * dt
 		self.opent = math.clamp(self.opent)
 		if self.opent == 0 or self.opent == 1 then self.openrate = 0 end
-		self.nonsolid = self.opent >= player.w
+		self.nonsolid = self.opent >= self.openwidth
 		if temp:set(self.entity:center()):dist2(player:center()) <= (self.radius * self.radius) then
 			if not self.key or player[self.key] then
 				self:open()

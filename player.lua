@@ -34,16 +34,19 @@ player.gun.reloadt = nil
 player.gun.range = 5
 
 function player:getkey(angle)
-	return function (x, y)
+	return function (x, y, level)
 		player:center(x + .5, y + .5)
 		player.dir = angle or 0
 		screen.centercursor()
 		player.gun.mag = player.gun.magsize
 		player.gun.lastfiretime = 0
 		player.health = 5
+		player.dead = false
 		player["red key"] = nil
 		player["green key"] = nil
 		player["blue key"] = nil
+		local i, j = self:ijcenter()
+		level.domain:set(i, j, "find the tape")
 		return player
 	end
 end

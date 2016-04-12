@@ -24,6 +24,9 @@ Level = subclass(State) do
 	function base:update(dt)
 		hud:update(dt)
 		self.domain:update(dt)
+		if player.dead then
+			player:update(dt)
+		end
 	end
 
 	function base:draw()

@@ -30,6 +30,7 @@ LivingEntity = subclass(physics.Entity) do
 	end
 
 	function base:die()
+		self:removefromdomain()
 		self.dead = true
 	end
 

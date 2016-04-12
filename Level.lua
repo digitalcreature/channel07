@@ -17,6 +17,7 @@ Level = subclass(State) do
 	end
 
 	function base:onenter()
+		love.audio.stop()
 		Level.current = self
 		physics.Domain.setcurrent(self.domain)
 	end
@@ -27,6 +28,8 @@ Level = subclass(State) do
 		if player.dead then
 			player:update(dt)
 		end
+		love.audio.setOrientation(-camera.dir.x, -camera.dir.y, 0, 0, 0, 1)
+		love.audio.setPosition(camera.pos:xy())
 	end
 
 	function base:draw()

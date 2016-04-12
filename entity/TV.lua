@@ -11,6 +11,12 @@ TV = subclass(Enemy) do
 
 	local base = TV
 
+	local staticsound = love.audio.newSource("sound/tv-static2.wav", "static")
+	staticsound:setAttenuationDistances(1, 3)
+	staticsound:setLooping(true)
+	local deathsound = love.audio.newSource("sound/tv-death.wav", "static")
+	deathsound:setVolume(1/2)
+
 	base.neighborradius = 3
 	base.avoidfactor = 3
 	base.damageradius = 1/4
@@ -32,6 +38,8 @@ TV = subclass(Enemy) do
 	function base:init()
 		base.super.init(self, 1/4, 1/4)
 		self.z = 0.6
+		self.staticsound = staticsound:clone()
+		self.deathsound = deathsound:clone()
 	end
 
 	local avoid, dpos, temp = util.calln(3, Vector)
@@ -62,6 +70,11 @@ TV = subclass(Enemy) do
 			end
 			dpos:set(player:center()):sub(self:center()):norm():add(avoid):scale(self.speed * dt)
 			self:move(dpos:xy())
+			local x, y = self:center()
+			self.staticsound:setPosition(x, y)
+			self.staticsound:play()
+		else
+			self.staticsound:stop()
 		end
 	end
 
@@ -76,6 +89,10 @@ TV = subclass(Enemy) do
 		base.super.die(self)
 		local effect = ParticleExplosion(deathparticle, 40, 1/2, 1, 1, 3, 1, 3, -5):center(self:center()):addtodomain()
 		effect.speed = 2
+		self.staticsound:stop()
+		local x, y = self:center()
+		self.deathsound:setPosition(x, y)
+		self.deathsound:play()
 	end
 
 end

@@ -13,7 +13,6 @@ require "entity.ParticleExplosion"
 player = LivingEntity(1/3, 1/3)
 player.damagecooldown = 3/4
 
-
 --facing direction
 player.dir = 0
 --move speed
@@ -33,6 +32,9 @@ player.gun.cooldown = 1/2
 player.gun.reloadtime = 3/2
 player.gun.range = 5
 
+local gunshotsound = love.audio.newSource("sound/gunshot.wav", "static")
+local reloadsound = love.audio.newSource("sound/reload.wav", "static")
+
 function player:getkey(angle)
 	return function (x, y, level)
 		player:center(x + .5, y + .5)
@@ -44,6 +46,7 @@ function player:getkey(angle)
 		player.maxhealth = 5
 		player.health = player.maxhealth
 		player.dead = false
+		player.won = false
 		player["red key"] = nil
 		player["green key"] = nil
 		player["blue key"] = nil
@@ -81,6 +84,9 @@ function player:update(dt)
 		dpos:rotate2d(self.dir - (math.pi / 2))
 		dpos:scale(dt)
 		self:move(dpos:xy())
+		local x, y = player:center()
+		gunshotsound:setPosition(x, y)
+		reloadsound:setPosition(x, y)
 		if self.gun.reloadt then
 			self.gun.reloadt = self.gun.reloadt + dt
 			if self.gun.reloadt >= self.gun.reloadtime then
@@ -151,17 +157,22 @@ function player.gun:fire()
 		self.lastfiretime = time
 		self.mag = self.mag - 1
 		physics.Domain.current:raycast(pos:set(player:center()), dir:set(Vector.east()):rotate2d(player.dir), nil, raycasthitprocessor)
+		gunshotsound:stop()
+		gunshotsound:setPitch(.95 + math.random() * .1)
+		gunshotsound:play()
 	end
 end
 
 function player.gun:reload()
 	if self.mag < self.magsize then
 		self.reloadt = 0
+		reloadsound:stop()
+		reloadsound:play()
 	end
 end
 
 function player:mousepressed(x, y, button)
-	if not self.dead then
+	if not self.dead and not self.won then
 		if button == 1 then
 			self.gun:fire()
 			return true
@@ -172,7 +183,7 @@ function player:mousepressed(x, y, button)
 end
 
 function player:keypressed(key)
-	if not self.dead then
+	if not self.dead and not self.won then
 		if key == "space" then
 			self.gun:fire()
 			return true
@@ -184,8 +195,10 @@ function player:keypressed(key)
 end
 
 function player:takedamage(damage)
-	if self.class.takedamage(self, damage) then
-		hud:damageflash()
+	if not self.won then
+		if self.class.takedamage(self, damage) then
+			hud:damageflash()
+		end
 	end
 end
 

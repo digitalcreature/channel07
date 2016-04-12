@@ -7,6 +7,7 @@ require "Door"
 require "entity.TV"
 require "entity.Key"
 require "entity.Heart"
+require "entity.VHS"
 
 local wall_red = TextureTile("level/wall-red.png")
 local wall_red_stripe = TextureTile("level/wall-red-stripe.png")
@@ -40,6 +41,7 @@ local key = {
 	Key.Blue:getkey(),
 	TV:getkey(),
 	Heart:getkey(),
+	VHS:getkey(),
 }
 
 return function ()

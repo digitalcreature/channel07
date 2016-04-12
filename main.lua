@@ -11,6 +11,7 @@ require "Level"
 require "Billboard"
 
 function love.load(arg)
+	love.audio.setDistanceModel("linearclamped")
 	screen.load()
 	State.setcurrent(require "level.0"())
 end

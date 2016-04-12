@@ -161,23 +161,25 @@ function player.gun:reload()
 end
 
 function player:mousepressed(x, y, button)
-	if button == 1 then
-		if not self.dead then
+	if not self.dead then
+		if button == 1 then
 			self.gun:fire()
 			return true
+		else
+			self.gun:reload()
 		end
-	else
-		self.gun:reload()
 	end
 end
 
 function player:keypressed(key)
-	if key == "space" then
-		self.gun:fire()
-		return true
-	end
-	if key == "r" then
-		self.gun:reload()
+	if not self.dead then
+		if key == "space" then
+			self.gun:fire()
+			return true
+		end
+		if key == "r" then
+			self.gun:reload()
+		end
 	end
 end
 

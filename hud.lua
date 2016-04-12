@@ -49,11 +49,14 @@ function hud:draw()
 	love.graphics.setColor(color.lerp(color.clear, self.damageflashcolor, self.damageflasht))
 	love.graphics.rectangle("fill", 0, 0, screen.width, screen.height)
 	love.graphics.setColor(color.white)
+	love.graphics.setFont(font.cool)
 	if player.dead then
 		if love.timer.getTime() % self.deathmessageflashrate < self.deathmessageflashrate / 2 then
 			local x = (screen.width / 2) - (deadmessage:getWidth() / 2)
-			local y = (screen.height / 2) - (deadmessage:getHeight() / 2)
+			local y = (screen.height / 3) - (deadmessage:getHeight() / 2)
 			love.graphics.draw(deadmessage, x, y)
+			love.graphics.setColor(192, 192, 192)
+			love.graphics.printf("press f5 to retry", 0, screen.height - 24, screen.width, "center")
 		end
 	else
 		local w, h = heart:getDimensions()
@@ -106,7 +109,6 @@ function hud:draw()
 			love.graphics.draw(key_red, x, 0)
 		end
 		if self.message then
-			love.graphics.setFont(font.cool)
 			love.graphics.printf(self.message, 0, 8, screen.width, "center")
 		end
 	end

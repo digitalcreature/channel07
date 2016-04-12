@@ -34,6 +34,9 @@ player.gun.range = 5
 
 local gunshotsound = love.audio.newSource("sound/gunshot.wav", "static")
 local reloadsound = love.audio.newSource("sound/reload.wav", "static")
+local emptysound = love.audio.newSource("sound/empty.wav", "static")
+local hitsound = love.audio.newSource("sound/player-hit.wav", "static")
+local deathsound = love.audio.newSource("sound/player-death.wav", "static")
 
 function player:getkey(angle)
 	return function (x, y, level)
@@ -87,6 +90,9 @@ function player:update(dt)
 		local x, y = player:center()
 		gunshotsound:setPosition(x, y)
 		reloadsound:setPosition(x, y)
+		emptysound:setPosition(x, y)
+		hitsound:setPosition(x, y)
+		deathsound:setPosition(x, y)
 		if self.gun.reloadt then
 			self.gun.reloadt = self.gun.reloadt + dt
 			if self.gun.reloadt >= self.gun.reloadtime then
@@ -153,18 +159,23 @@ end
 local pos, dir = Vector(), Vector()
 function player.gun:fire()
 	local time = love.timer.getTime()
-	if time - self.lastfiretime >= self.cooldown and self.mag > 0 and not self.reloadt then
-		self.lastfiretime = time
-		self.mag = self.mag - 1
-		physics.Domain.current:raycast(pos:set(player:center()), dir:set(Vector.east()):rotate2d(player.dir), nil, raycasthitprocessor)
-		gunshotsound:stop()
-		gunshotsound:setPitch(.95 + math.random() * .1)
-		gunshotsound:play()
+	if self.mag > 0 then
+		if time - self.lastfiretime >= self.cooldown and not self.reloadt then
+			self.lastfiretime = time
+			self.mag = self.mag - 1
+			physics.Domain.current:raycast(pos:set(player:center()), dir:set(Vector.east()):rotate2d(player.dir), nil, raycasthitprocessor)
+			gunshotsound:stop()
+			gunshotsound:setPitch(.95 + math.random() * .1)
+			gunshotsound:play()
+		end
+	else
+		emptysound:stop()
+		emptysound:play()
 	end
 end
 
 function player.gun:reload()
-	if self.mag < self.magsize then
+	if self.mag < self.magsize and not self.reloadt then
 		self.reloadt = 0
 		reloadsound:stop()
 		reloadsound:play()
@@ -198,8 +209,17 @@ function player:takedamage(damage)
 	if not self.won then
 		if self.class.takedamage(self, damage) then
 			hud:damageflash()
+			hitsound:stop()
+			hitsound:play()
 		end
 	end
+end
+
+function player:die()
+	player.class.die(self)
+	reloadsound:stop()
+	deathsound:stop()
+	deathsound:play()
 end
 
 function player:render()

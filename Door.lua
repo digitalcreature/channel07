@@ -17,6 +17,9 @@ Door = subclass(TextureTile) do
 	base.opentime = 1/2
 	base.openwidth = 3/4
 
+	local opensound = love.audio.newSource("sound/door-open.wav", "static")
+	local closesound = love.audio.newSource("sound/door-close.wav", "static")
+
 	function base:init(key, xtex, ytex)
 		xtex = xtex or "level/door.png"
 		base.super.init(self, xtex, ytex)
@@ -42,10 +45,18 @@ Door = subclass(TextureTile) do
 
 	function base:open()
 		self.openrate = 1 / self.opentime
+		if self.opent == 0 then
+			self.entity.opensound:stop()
+			self.entity.opensound:play()
+		end
 	end
 
 	function base:close()
 		self.openrate = -1 / self.opentime
+		if self.opent == 1 then
+			self.entity.closesound:stop()
+			self.entity.closesound:play()
+		end
 	end
 
 	function base:shader(info)
@@ -96,6 +107,11 @@ Door = subclass(TextureTile) do
 			self.x, self.y = x, y
 			self.door = door
 			door.entity = self
+			self.opensound = opensound:clone()
+			self.closesound = closesound:clone()
+			x, y = self:center()
+			self.opensound:setPosition(x, y)
+			self.closesound:setPosition(x, y)
 		end
 
 		function base:update(dt)

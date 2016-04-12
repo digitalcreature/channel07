@@ -16,8 +16,19 @@ local noammo = love.graphics.newImage("sprite/noammo.png")
 local reloading = love.graphics.newImage("sprite/reloading.png")
 
 local gun = love.graphics.newImage("sprite/gun.png")
-local gun_fire = love.graphics.newImage("sprite/gun-fire.png")
-local gun_reload = love.graphics.newImage("sprite/gun-reload.png")
+local gun_fire = {
+	love.graphics.newImage("sprite/gun-fire1.png"),
+	love.graphics.newImage("sprite/gun-fire2.png"),
+	love.graphics.newImage("sprite/gun-fire3.png"),
+	gun,
+}
+
+local r1 = love.graphics.newImage("sprite/gun-reload1.png")
+local r2 = love.graphics.newImage("sprite/gun-reload2.png")
+local r3 = love.graphics.newImage("sprite/gun-reload3.png")
+local gun_reload = {
+	r1, r2, r3, r3, r3, r3, r3, r3, r3, r3, r3, r3, r2, r1
+}
 
 local deadmessage = love.graphics.newImage("sprite/deadmessage.png")
 local crosshair = love.graphics.newImage("sprite/crosshair.png")
@@ -61,18 +72,22 @@ function hud:draw()
 					love.graphics.draw(noammo, 0, screen.height - h)
 				end
 			end
-			if (love.timer.getTime() - player.gun.lastfiretime) / player.gun.cooldown > 2/3 then
+			local firet = (love.timer.getTime() - player.gun.lastfiretime) / player.gun.cooldown
+			if firet >= 1 then
 				w, h = gun:getDimensions()
 				love.graphics.draw(gun, screen.width - w, screen.height - h)
 			else
-				w, h = gun_fire:getDimensions()
-				love.graphics.draw(gun_fire, screen.width - w, screen.height - h)
+				local sprite = gun_fire[math.floor(firet * #gun_fire) + 1]
+				w, h = sprite:getDimensions()
+				love.graphics.draw(sprite, screen.width - w, screen.height - h)
 			end
 		else
 			w, h = reloading:getDimensions()
 			love.graphics.draw(reloading, 0, screen.height - h)
-			w, h = gun_reload:getDimensions()
-			love.graphics.draw(gun_reload, screen.width - w, screen.height - h)
+			local reloadt = player.gun.reloadt / player.gun.reloadtime
+			local sprite = gun_reload[math.floor(reloadt * #gun_reload) + 1]
+			w, h = sprite:getDimensions()
+			love.graphics.draw(sprite, screen.width - w, screen.height - h)
 		end
 		local x = (screen.width / 2) - (crosshair:getWidth() / 2)
 		local y = (screen.height / 2) - (crosshair:getHeight() / 2)

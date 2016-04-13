@@ -49,9 +49,11 @@ function hud:update(dt)
 end
 
 function hud:draw()
+	love.graphics.setColor(color.white)
 	if not player.won then
 		love.graphics.setColor(color.lerp(color.clear, self.damageflashcolor, self.damageflasht))
 		love.graphics.rectangle("fill", 0, 0, screen.width, screen.height)
+		love.graphics.setColor(color.white)
 		love.graphics.setColor(color.white)
 		love.graphics.setFont(font.cool)
 		if player.dead then

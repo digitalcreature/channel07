@@ -11,6 +11,9 @@ Item = subclass(physics.Entity) do
 
 	function base:init()
 		base.super.init(self, 1, 1)
+		if self.class.sound then
+			self.sound = self.class.sound:clone()
+		end
 	end
 
 	local temp = Vector()
@@ -18,6 +21,11 @@ Item = subclass(physics.Entity) do
 		if self:canbetaken() and temp:set(self:center()):dist2(player:center()) <= (self.radius * self.radius) then
 			self:ontaken()
 			self:removefromdomain()
+			if self.sound then
+				local x, y = self:center()
+				self.sound:setPosition(x, y)
+				self.sound:play()
+			end
 		end
 	end
 

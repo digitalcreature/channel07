@@ -7,6 +7,8 @@ Key = subclass(Item) do
 
 	local base = Key
 
+	base.sound = love.audio.newSource("sound/key-pickup.wav", "static")
+
 	function base:ontaken()
 		player[self.name] = true
 	end

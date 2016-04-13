@@ -27,7 +27,6 @@ player.headheight = 0.5
 player.deathheight = 0.15
 
 player.gun = {}
-player.gun.magsize = 6
 player.gun.cooldown = 1/2
 player.gun.reloadtime = 3/2
 player.gun.range = 5
@@ -43,10 +42,11 @@ function player:getkey(angle)
 		player:center(x + .5, y + .5)
 		player.dir = angle or 0
 		screen.centercursor()
-		player.gun.mag = player.gun.magsize
+		player.gun.magsize = 3
+		player.gun.mag = -1
 		player.gun.reloadt = nil
 		player.gun.lastfiretime = 0
-		player.maxhealth = 5
+		player.maxhealth = 3
 		player.health = player.maxhealth
 		player.dead = false
 		player.won = false
@@ -67,6 +67,9 @@ local dpos = Vector()
 function player:update(dt)
 	local viewbob
 	if not self.dead then
+		if self.gun.mag == -1 then
+			self.gun:reload()
+		end
 		local ddir = 0
 		if love.keyboard.isDown("left") then ddir = ddir + self.lookspd * dt end
 		if love.keyboard.isDown("right") then ddir = ddir - self.lookspd * dt end
@@ -169,8 +172,10 @@ function player.gun:fire()
 			gunshotsound:play()
 		end
 	else
-		emptysound:stop()
-		emptysound:play()
+		if not self.reloadt then
+			emptysound:stop()
+			emptysound:play()
+		end
 	end
 end
 

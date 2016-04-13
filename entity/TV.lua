@@ -11,7 +11,7 @@ TV = subclass(Enemy) do
 
 	local base = TV
 
-	local staticsound = love.audio.newSource("sound/tv-static2.wav", "static")
+	local staticsound = love.audio.newSource("sound/tv-static.wav", "static")
 	staticsound:setAttenuationDistances(1, 3)
 	staticsound:setLooping(true)
 	local deathsound = love.audio.newSource("sound/tv-death.wav", "static")

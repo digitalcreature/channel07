@@ -10,10 +10,14 @@ require "State"
 require "Level"
 require "Billboard"
 
+function loadlevel()
+	State.setcurrent(require "level.0"())
+end
+
 function love.load(arg)
 	love.audio.setDistanceModel("linearclamped")
 	screen.load()
-	State.setcurrent(require "level.0"())
+	State.setcurrent(require "introcredit")
 end
 
 function love.update(dt)
@@ -28,7 +32,7 @@ end
 
 function love.keypressed(key)
 	if key == "f5" then
-		State.setcurrent(require "level.0"())
+		loadlevel()
 	else
 		return screen.keypressed(key) or pause.keypressed(key) or State.current:keypressed(key)
 	end

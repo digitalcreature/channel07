@@ -19,7 +19,7 @@ player.dir = 0
 player.spdx = 2
 player.spdy = 2
 --keyboard look speed (rad/s)
-player.lookspd = 1.5
+player.lookspd = 2
 --mouselook sensitivity
 player.sensitivity = .003
 

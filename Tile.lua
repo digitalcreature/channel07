@@ -31,7 +31,7 @@ ColorTile = subclass(Tile) do
 	end
 
 	function base:shader(info)
-		if info.acis == "x" then
+		if info.axis == "x" then
 			love.graphics.setColor(self.xcolor)
 		else
 			love.graphics.setColor(self.ycolor)
